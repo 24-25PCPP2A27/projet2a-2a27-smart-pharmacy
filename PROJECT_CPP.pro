@@ -1,4 +1,7 @@
 QT       += core gui sql
+QT += widgets printsupport
+QT += widgets
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,12 +23,14 @@ CONFIG += c++11
 
 SOURCES += \
     client.cpp \
+    clientchart.cpp \
         main.cpp \
     connection.cpp \
     clientwindow.cpp
 
 HEADERS += \
     client.h \
+    clientchart.h \
     connection.h \ \
     clientwindow.h
 

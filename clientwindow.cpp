@@ -3,12 +3,19 @@
 #include "client.h"
 #include <QMessageBox>
 #include <QtDebug>
+#include <QFileDialog>
+#include <QTextDocument>
+#include <QPrinter>
+#include <QMessageBox>
+#include <clientchart.h>
 clientwindow::clientwindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ClientWindow)
 {
     ui->setupUi(this);
     displayClients();
+    connect(ui->generateReportButton, &QPushButton::clicked, this, &clientwindow::generateRestockReport);
+
 }
 
 clientwindow::~clientwindow()
@@ -16,7 +23,7 @@ clientwindow::~clientwindow()
     delete ui;
 }
 
-void clientwindow::on_pushButton_onAddClients_clicked() {
+void clientwindow::on_AddClients_clicked() {
 
     qDebug() << "Ajouter button clicked.";
 
@@ -77,7 +84,7 @@ void clientwindow::on_suppButton_clicked() {
     }
 }
 
-void clientwindow::on_pushButton_onUpdateClients_clicked() {
+void clientwindow::on_UpdateClients_clicked() {
     // Get values from UI fields in the update tab
     int numvente = ui->numventeUpdate->text().toInt();
     int quantite = ui->quantiteUpdate->text().toInt();
@@ -133,7 +140,7 @@ void clientwindow::displayClients() {
 
     // Define the headers manually and check if they display
     QStringList headers;
-    headers << "Total" << "Quantite" << "Numvente" << "Medicament" << "Date";
+    headers << "Numvente" << "Quantite" << "Total" << "Medicament" << "Date";
     ui->tableWidget->setHorizontalHeaderLabels(headers);
 
     // Force the headers to be shown in case they don’t update automatically
@@ -144,38 +151,201 @@ void clientwindow::displayClients() {
 
 }
 
-void clientwindow::on_pushButton_on_rechercheButton_clicked() {
+void clientwindow::on_rechercheButton_clicked() {
+    // Retrieve the input from the search line edit
     int numvente = ui->searchLineEdit->text().toInt();
+
+    // Check if the input is valid
     if (numvente == 0) {
-        QMessageBox::warning(this, "Invalid Input", "Please enter a valid number.");
+        QMessageBox::warning(this, "Invalid Input", "Please enter a valid Num Vente.");
         return;
     }
 
-    // Create and execute the search query
+    // Use the chercher function to search for the client
+    QSqlQueryModel* model = cl.chercher(numvente);
+
+    // Check if the search returned any results
+    if (model->rowCount() == 0) {
+        QMessageBox::information(this, "No Results", "No client found with the specified Num Vente.");
+        return;
+    }
+
+    // Update the table widget with the search results
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(model->rowCount());
+    ui->tableWidget->setColumnCount(model->columnCount());
+
+    for (int row = 0; row < model->rowCount(); ++row) {
+        for (int col = 0; col < model->columnCount(); ++col) {
+            QString data = model->data(model->index(row, col)).toString();
+            ui->tableWidget->setItem(row, col, new QTableWidgetItem(data));
+        }
+    }
+
+    // Set the column headers (optional)
+    QStringList headers = {"Num Vente", "Quantité", "Total", "Medicament", "Date"};
+    ui->tableWidget->setHorizontalHeaderLabels(headers);
+}
+
+void clientwindow::on_trierButton_clicked()
+{
+    // Use the sort function
+     QSqlQueryModel* model = cl.trier();
+
+     // Check if the model is valid
+     if (model->rowCount() == 0) {
+         QMessageBox::information(this, "No Results", "No data available to sort.");
+         return;
+     }
+
+     // Update the table widget with the sorted data
+     ui->tableWidget->clearContents();
+     ui->tableWidget->setRowCount(model->rowCount());
+     ui->tableWidget->setColumnCount(model->columnCount());
+
+     for (int row = 0; row < model->rowCount(); ++row) {
+         for (int col = 0; col < model->columnCount(); ++col) {
+             QString data = model->data(model->index(row, col)).toString();
+             ui->tableWidget->setItem(row, col, new QTableWidgetItem(data));
+         }
+     }
+
+     // Set the column headers (optional)
+     QStringList headers = {"Num Vente", "Quantité", "Total", "Medicament", "Date"};
+     ui->tableWidget->setHorizontalHeaderLabels(headers);
+}
+
+void clientwindow::on_exportButton_clicked()
+{
+    // Step 1: Choose the file path for the PDF
+       QString filePath = QFileDialog::getSaveFileName(this, "Save as PDF", "", "*.pdf");
+       if (filePath.isEmpty()) {
+           return; // User canceled
+       }
+
+       // Ensure the file has a .pdf extension
+       if (!filePath.endsWith(".pdf", Qt::CaseInsensitive)) {
+           filePath += ".pdf";
+       }
+
+       // Step 2: Start building HTML content for the table
+       QString html;
+       html += "<h2>Client Data Export</h2>";
+       html += "<table border='1' cellspacing='0' cellpadding='4'>";
+       html += "<thead><tr>";
+       QStringList headers = {"Num Vente", "Quantité", "Total", "Medicament", "Date"};
+       for (const QString &header : headers) {
+           html += QString("<th>%1</th>").arg(header);
+       }
+       html += "</tr></thead>";
+
+       // Populate table rows
+       html += "<tbody>";
+       for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+           html += "<tr>";
+           for (int col = 0; col < ui->tableWidget->columnCount(); ++col) {
+               QString cellData = ui->tableWidget->item(row, col)->text();
+               html += QString("<td>%1</td>").arg(cellData);
+           }
+           html += "</tr>";
+       }
+       html += "</tbody></table>";
+
+       // Step 3: Create a QTextDocument and set the HTML content
+       QTextDocument document;
+       document.setHtml(html);
+
+       // Step 4: Configure the printer and export to PDF
+       QPrinter printer(QPrinter::PrinterMode::HighResolution);
+       printer.setOutputFormat(QPrinter::PdfFormat);
+       printer.setOutputFileName(filePath);
+       document.print(&printer);
+
+       QMessageBox::information(this, "Success", "Client data exported as PDF successfully!");
+}
+
+void clientwindow::on_statsButton_clicked() {
+    client cl;
+    QMap<QString, int> stats = cl.getMedicamentStats();
+
+    clientchart *chartWidget = new clientchart(stats, this);
+
+    QLayout *layout = ui->frame_chart->layout();
+    if (!layout) {
+        layout = new QVBoxLayout(ui->frame_chart);
+        ui->frame_chart->setLayout(layout);
+    }
+
+    QLayoutItem *child;
+    while ((child = layout->takeAt(0)) != nullptr) {
+        delete child->widget();  // Remove previous chart widget
+        delete child;
+    }
+
+    layout->addWidget(chartWidget);
+    chartWidget->show();
+
+    ui->tabWidget->setCurrentWidget(ui->tab_statistics);
+}
+
+void clientwindow::analyzeTrends() {
     QSqlQuery query;
-    query.prepare("SELECT * FROM clients WHERE numvente = :numvente");
-    query.bindValue(":numvente", numvente);
-    if (!query.exec()) {
-        QMessageBox::warning(this, "Search Error", "Failed to search for client.");
-        return;
-    }
+    query.prepare("SELECT medicament, SUM(quantite) AS total_quantity, MAX(date) AS last_purchase_date "
+                  "FROM client "
+                  "GROUP BY medicament "
+                  "HAVING total_quantity > :threshold");
 
-    // Display the results in the table widget
-    ui->tableWidget->setRowCount(0); // Clear previous search results
-    int row = 0;
-    while (query.next()) {
-        ui->tableWidget->insertRow(row);
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(query.value("numvente").toString()));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(query.value("quantite").toString()));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(query.value("total").toString()));
-        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(query.value("medicament").toString()));
-        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(query.value("datee").toString()));
-        row++;
-    }
-    if (row == 0) {
-        QMessageBox::information(this, "No Results", "No client found with the specified numvente.");
+    query.bindValue(":threshold", 50); // Example: High demand threshold
+    if (query.exec()) {
+        while (query.next()) {
+            QString medication = query.value("medicament").toString();
+            int totalQuantity = query.value("total_quantity").toInt();
+            QDate lastPurchaseDate = query.value("last_purchase_date").toDate();
+
+            // Alert if purchases spiked in the last 7 days
+            if (lastPurchaseDate.daysTo(QDate::currentDate()) < 7) {
+                generateRestockAlert(medication, totalQuantity);
+            }
+        }
     }
 }
 
+void clientwindow::generateRestockAlert(const QString &medication, int totalQuantity) {
+    int suggestedQuantity = totalQuantity * 1.5; // Suggest 50% more than recent demand
 
+    // Log alert in the database (optional)
+    QSqlQuery query;
+    query.prepare("INSERT INTO restock_alerts (medicament, alert_date, suggested_quantity) "
+                  "VALUES (:medicament, :alert_date, :suggested_quantity)");
+    query.bindValue(":medicament", medication);
+    query.bindValue(":alert_date", QDate::currentDate());
+    query.bindValue(":suggested_quantity", suggestedQuantity);
+    query.exec();
 
+    // Display alert to user
+    QMessageBox::information(this, "Restock Alert",
+                             "High demand detected for " + medication +
+                             ". Suggested restock: " + QString::number(suggestedQuantity) + " units.");
+}
+
+void clientwindow::generateRestockReport() {
+    QSqlQuery query;
+    query.exec("SELECT medicament, SUM(quantite) AS total_quantity "
+               "FROM client "
+               "GROUP BY medicament");
+
+    // Populate the table widget
+    ui->restockTableWidget->setRowCount(0); // Clear previous rows
+    while (query.next()) {
+        QString medication = query.value("medicament").toString();
+        int totalQuantity = query.value("total_quantity").toInt();
+        int suggestedQuantity = totalQuantity * 1.5; // Suggested restock amount
+
+        // Add data to the table
+        int row = ui->restockTableWidget->rowCount();
+        ui->restockTableWidget->insertRow(row);
+        ui->restockTableWidget->setItem(row, 0, new QTableWidgetItem(medication));
+        ui->restockTableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(totalQuantity)));
+        ui->restockTableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(suggestedQuantity)));
+    }
+}

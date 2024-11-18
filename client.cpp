@@ -28,9 +28,9 @@ QSqlQueryModel* client::displayClients() {
     model->setQuery("SELECT * FROM client");
 
     // Set header data for better readability in the UI
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Total"));
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Numvente"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Quantite"));
-    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Numvente"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Total"));
     model->setHeaderData(3, Qt::Horizontal, QObject::tr("Medicament"));
     model->setHeaderData(4, Qt::Horizontal, QObject::tr("datee"));
 
@@ -49,8 +49,7 @@ bool client::supprimer(int numvente) {
 
 bool client::modifier(int numvente) {
     QSqlQuery query;
-    query.prepare("UPDATE clients SET numvente = :numvente, quantite = :quantite, "
-                  "total = :total, medicament = :medicament, datee = :datee WHERE numvente = :numvente");
+    query.prepare("UPDATE client SET numvente = :numvente, quantite = :quantite, medicament = :medicament, total = :total, datee = :datee WHERE numvente = :numvente");
     query.bindValue(":numvente", numvente);
     query.bindValue(":quantite", quantite);
     query.bindValue(":total", total);
@@ -63,12 +62,12 @@ bool client::modifier(int numvente) {
     }
     return true;
 }
-/*
+
 QSqlQueryModel* client::chercher(int numvente) {
     QSqlQueryModel* model = new QSqlQueryModel();
     QSqlQuery query;
 
-    query.prepare("SELECT * FROM clients WHERE numvente = :numvente");
+    query.prepare("SELECT * FROM client WHERE numvente = :numvente");
     query.bindValue(":numvente", numvente);
 
     if (!query.exec()) {
@@ -86,5 +85,39 @@ QSqlQueryModel* client::chercher(int numvente) {
 
     return model;
 }
-*/
 
+QSqlQueryModel* client::trier() {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT * FROM client ORDER BY datee DESC");
+
+    if (model->lastError().isValid()) {
+        qDebug() << "Sort failed:" << model->lastError().text();
+    }
+
+    // Set headers (ensure they match your database schema)
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Num Vente"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Quantité"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Total"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Medicament"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Date"));
+
+    return model;
+}
+
+QMap<QString, int> client::getMedicamentStats() {
+    QMap<QString, int> stats;
+    QSqlQuery query;
+
+    query.prepare("SELECT MEDICAMENT, COUNT(*) as count FROM CLIENT GROUP BY MEDICAMENT");
+    if (!query.exec()) {
+        qDebug() << "Error retrieving medicament statistics:" << query.lastError().text();
+    } else {
+        while (query.next()) {
+            QString medicament = query.value("MEDICAMENT").toString();
+            int count = query.value("count").toInt();
+            stats[medicament] = count;
+        }
+    }
+
+    return stats;
+}

@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -91,7 +91,7 @@
         <widget class="QDateEdit" name="dateEdit"/>
        </item>
        <item row="5" column="1">
-        <widget class="QPushButton" name="pushButton_onAddClients">
+        <widget class="QPushButton" name="AddClients">
          <property name="text">
           <string>ajouter</string>
          </property>
@@ -108,17 +108,17 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
-        <width>511</width>
-        <height>471</height>
+        <y>50</y>
+        <width>561</width>
+        <height>381</height>
        </rect>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>60</y>
+        <x>580</x>
+        <y>50</y>
         <width>71</width>
         <height>16</height>
        </rect>
@@ -130,24 +130,63 @@
      <widget class="QLineEdit" name="searchLineEdit">
       <property name="geometry">
        <rect>
-        <x>610</x>
-        <y>60</y>
+        <x>650</x>
+        <y>50</y>
         <width>113</width>
         <height>22</height>
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_on_rechercheButton">
+     <widget class="QPushButton" name="rechercheButton">
       <property name="geometry">
        <rect>
-        <x>620</x>
-        <y>110</y>
+        <x>660</x>
+        <y>100</y>
         <width>93</width>
         <height>28</height>
        </rect>
       </property>
       <property name="text">
        <string>chercher</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="trierButton">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>140</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>trier</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="exportButton">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>180</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>exporter</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="statsButton">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>220</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>stats</string>
       </property>
      </widget>
     </widget>
@@ -216,7 +255,7 @@
         <widget class="QDateEdit" name="dateUpdate"/>
        </item>
        <item row="5" column="1">
-        <widget class="QPushButton" name="pushButton_onUpdateClients">
+        <widget class="QPushButton" name="UpdateClients">
          <property name="text">
           <string>modifier</string>
          </property>
@@ -271,6 +310,68 @@
       </property>
       <property name="text">
        <string>eliminer</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_statistics">
+     <attribute name="title">
+      <string>Statistics </string>
+     </attribute>
+     <widget class="QFrame" name="frame_chart">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>581</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>Restocking Suggestions</string>
+     </attribute>
+     <widget class="QTableWidget" name="restockTableWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>591</width>
+        <height>351</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="generateReportButton">
+      <property name="geometry">
+       <rect>
+        <x>640</x>
+        <y>210</y>
+        <width>101</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>generate report</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>30</y>
+        <width>181</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
       </property>
      </widget>
     </widget>

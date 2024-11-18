@@ -39,6 +39,9 @@ public:
     QSqlQueryModel *displayClients();
     bool supprimer(int);
     bool modifier(int numvente);
-    //bool chercher(int numvente);
+    QSqlQueryModel *chercher(int numvente);
+    QSqlQueryModel *trier();
+    QMap<QString, int> getMedicamentStats();
+
 };
 #endif // CLIENT_H

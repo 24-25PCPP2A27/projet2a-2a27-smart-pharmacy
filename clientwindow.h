@@ -16,10 +16,18 @@ public:
     ~clientwindow();
 
 private slots: // Ensure that these methods are declared as slots
-    void on_pushButton_onAddClients_clicked();
-    void on_pushButton_onUpdateClients_clicked();
+    void on_AddClients_clicked();
+    void on_UpdateClients_clicked();
     void on_suppButton_clicked();
-    void on_pushButton_on_rechercheButton_clicked();
+    void on_rechercheButton_clicked();
+    void on_trierButton_clicked();
+    void on_exportButton_clicked();
+
+    void on_statsButton_clicked();
+
+    void analyzeTrends();                  // Analyze purchase trends
+    void generateRestockAlert(const QString &medication, int totalQuantity); // Create an alert
+    void generateRestockReport();
 
 private:
 
