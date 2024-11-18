@@ -18,8 +18,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
@@ -58,8 +56,8 @@ public:
     QLabel *label_Adr_5;
     QComboBox *comboBox;
     QLineEdit *lineEdit_id_sup;
-    QPushButton *pb_supp;
     QLabel *label;
+    QPushButton *pb_supp;
     QLabel *label_recherche;
     QLineEdit *lineEdit_recherche;
     QPushButton *pb_recherche;
@@ -69,8 +67,9 @@ public:
     QLabel *countdown;
     QPushButton *pb_PDF;
     QPushButton *pb_STAT;
-    QMenuBar *menuBar;
-    QMenu *menuSponsor;
+    QPushButton *Search_button;
+    QPushButton *page_email;
+    QLineEdit *search_line_edit;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -78,7 +77,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1208, 682);
+        MainWindow->resize(1425, 682);
         actionNew = new QAction(MainWindow);
         actionNew->setObjectName("actionNew");
         QIcon icon;
@@ -107,18 +106,19 @@ public:
         tabSponsor->setStyleSheet(QString::fromUtf8(""));
         tab = new QWidget();
         tab->setObjectName("tab");
-        groupBox_3 = new QGroupBox(tab);
+        tabSponsor->addTab(tab, QString());
+        groupBox_3 = new QGroupBox(centralWidget);
         groupBox_3->setObjectName("groupBox_3");
-        groupBox_3->setGeometry(QRect(30, 10, 1151, 571));
+        groupBox_3->setGeometry(QRect(190, 30, 1151, 571));
         groupBox_3->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 238);\n"
 "background-color: rgb(233, 255, 254);"));
         tab_fournisseur = new QTableView(groupBox_3);
         tab_fournisseur->setObjectName("tab_fournisseur");
-        tab_fournisseur->setGeometry(QRect(480, 150, 501, 261));
+        tab_fournisseur->setGeometry(QRect(490, 110, 501, 261));
         tab_fournisseur->setStyleSheet(QString::fromUtf8(""));
         groupBox = new QGroupBox(groupBox_3);
         groupBox->setObjectName("groupBox");
-        groupBox->setGeometry(QRect(10, 30, 461, 491));
+        groupBox->setGeometry(QRect(20, 10, 461, 491));
         groupBox->setStyleSheet(QString::fromUtf8(""));
         label_ID = new QLabel(groupBox);
         label_ID->setObjectName("label_ID");
@@ -177,7 +177,7 @@ public:
         lineEdit_tlf->setStyleSheet(QString::fromUtf8("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));"));
         pb_modifier = new QPushButton(groupBox);
         pb_modifier->setObjectName("pb_modifier");
-        pb_modifier->setGeometry(QRect(30, 340, 161, 41));
+        pb_modifier->setGeometry(QRect(230, 250, 161, 41));
         pb_modifier->setFont(font1);
         pb_modifier->setAutoFillBackground(false);
         pb_modifier->setStyleSheet(QString::fromUtf8("\n"
@@ -199,45 +199,45 @@ public:
         comboBox->addItem(QString());
         comboBox->setObjectName("comboBox");
         comboBox->setGeometry(QRect(200, 200, 82, 28));
-        lineEdit_id_sup = new QLineEdit(groupBox_3);
+        lineEdit_id_sup = new QLineEdit(groupBox);
         lineEdit_id_sup->setObjectName("lineEdit_id_sup");
-        lineEdit_id_sup->setGeometry(QRect(630, 470, 181, 21));
+        lineEdit_id_sup->setGeometry(QRect(80, 360, 181, 21));
         lineEdit_id_sup->setStyleSheet(QString::fromUtf8("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));"));
-        pb_supp = new QPushButton(groupBox_3);
-        pb_supp->setObjectName("pb_supp");
-        pb_supp->setGeometry(QRect(850, 460, 131, 41));
-        QFont font2;
-        font2.setFamilies({QString::fromUtf8("OCR A Extended")});
-        font2.setPointSize(12);
-        pb_supp->setFont(font2);
-        pb_supp->setStyleSheet(QString::fromUtf8("color: rgb(35, 170, 102);"));
-        label = new QLabel(groupBox_3);
+        label = new QLabel(groupBox);
         label->setObjectName("label");
-        label->setGeometry(QRect(550, 470, 41, 20));
+        label->setGeometry(QRect(30, 360, 41, 20));
+        QFont font2;
+        font2.setPointSize(9);
+        label->setFont(font2);
+        pb_supp = new QPushButton(groupBox);
+        pb_supp->setObjectName("pb_supp");
+        pb_supp->setGeometry(QRect(300, 350, 131, 41));
         QFont font3;
-        font3.setPointSize(9);
-        label->setFont(font3);
+        font3.setFamilies({QString::fromUtf8("OCR A Extended")});
+        font3.setPointSize(12);
+        pb_supp->setFont(font3);
+        pb_supp->setStyleSheet(QString::fromUtf8("color: rgb(35, 170, 102);"));
         label_recherche = new QLabel(groupBox_3);
         label_recherche->setObjectName("label_recherche");
-        label_recherche->setGeometry(QRect(540, 110, 131, 16));
+        label_recherche->setGeometry(QRect(530, 60, 131, 16));
         QFont font4;
         font4.setFamilies({QString::fromUtf8("MS Shell Dlg 2")});
         font4.setPointSize(10);
         label_recherche->setFont(font4);
         lineEdit_recherche = new QLineEdit(groupBox_3);
         lineEdit_recherche->setObjectName("lineEdit_recherche");
-        lineEdit_recherche->setGeometry(QRect(640, 110, 181, 21));
+        lineEdit_recherche->setGeometry(QRect(650, 60, 181, 21));
         lineEdit_recherche->setStyleSheet(QString::fromUtf8("border-color: qconicalgradient(cx:0.5, cy:0.5, angle:0, stop:0 rgba(35, 40, 3, 255), stop:0.16 rgba(136, 106, 22, 255), stop:0.225 rgba(166, 140, 41, 255), stop:0.285 rgba(204, 181, 74, 255), stop:0.345 rgba(235, 219, 102, 255), stop:0.415 rgba(245, 236, 112, 255), stop:0.52 rgba(209, 190, 76, 255), stop:0.57 rgba(187, 156, 51, 255), stop:0.635 rgba(168, 142, 42, 255), stop:0.695 rgba(202, 174, 68, 255), stop:0.75 rgba(218, 202, 86, 255), stop:0.815 rgba(208, 187, 73, 255), stop:0.88 rgba(187, 156, 51, 255), stop:0.935 rgba(137, 108, 26, 255), stop:1 rgba(35, 40, 3, 255));\n"
 "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));"));
         pb_recherche = new QPushButton(groupBox_3);
         pb_recherche->setObjectName("pb_recherche");
-        pb_recherche->setGeometry(QRect(850, 100, 131, 41));
-        pb_recherche->setFont(font2);
+        pb_recherche->setGeometry(QRect(850, 50, 131, 41));
+        pb_recherche->setFont(font3);
         pb_recherche->setStyleSheet(QString::fromUtf8("color: rgb(216, 191, 0);\n"
 "color: rgb(35, 170, 102);"));
         label_recherche_2 = new QLabel(groupBox_3);
         label_recherche_2->setObjectName("label_recherche_2");
-        label_recherche_2->setGeometry(QRect(1000, 170, 131, 16));
+        label_recherche_2->setGeometry(QRect(1000, 110, 131, 16));
         QFont font5;
         font5.setFamilies({QString::fromUtf8("MS Shell Dlg 2")});
         font5.setPointSize(11);
@@ -246,44 +246,51 @@ public:
         label_recherche_2->setStyleSheet(QString::fromUtf8("color: rgb(35, 170, 102);"));
         radioButton_id = new QRadioButton(groupBox_3);
         radioButton_id->setObjectName("radioButton_id");
-        radioButton_id->setGeometry(QRect(1000, 200, 97, 20));
-        radioButton_id->setFont(font3);
+        radioButton_id->setGeometry(QRect(1000, 140, 97, 20));
+        radioButton_id->setFont(font2);
         radioButton_nom = new QRadioButton(groupBox_3);
         radioButton_nom->setObjectName("radioButton_nom");
-        radioButton_nom->setGeometry(QRect(1000, 240, 121, 20));
-        radioButton_nom->setFont(font3);
+        radioButton_nom->setGeometry(QRect(1000, 170, 121, 20));
+        radioButton_nom->setFont(font2);
         countdown = new QLabel(groupBox_3);
         countdown->setObjectName("countdown");
         countdown->setGeometry(QRect(980, 10, 131, 51));
         pb_PDF = new QPushButton(groupBox_3);
         pb_PDF->setObjectName("pb_PDF");
-        pb_PDF->setGeometry(QRect(990, 320, 131, 41));
-        pb_PDF->setFont(font2);
+        pb_PDF->setGeometry(QRect(990, 200, 131, 41));
+        pb_PDF->setFont(font3);
         pb_PDF->setStyleSheet(QString::fromUtf8("color: rgb(35, 170, 102);"));
         pb_STAT = new QPushButton(groupBox_3);
         pb_STAT->setObjectName("pb_STAT");
-        pb_STAT->setGeometry(QRect(990, 380, 131, 41));
-        pb_STAT->setFont(font2);
+        pb_STAT->setGeometry(QRect(990, 260, 131, 41));
+        pb_STAT->setFont(font3);
         pb_STAT->setStyleSheet(QString::fromUtf8("color: rgb(35, 170, 102);"));
-        tabSponsor->addTab(tab, QString());
+        Search_button = new QPushButton(groupBox_3);
+        Search_button->setObjectName("Search_button");
+        Search_button->setGeometry(QRect(530, 10, 161, 41));
+        Search_button->setFont(font1);
+        Search_button->setAutoFillBackground(false);
+        Search_button->setStyleSheet(QString::fromUtf8("\n"
+"color: rgb(35, 170, 102);\n"
+""));
+        page_email = new QPushButton(groupBox_3);
+        page_email->setObjectName("page_email");
+        page_email->setGeometry(QRect(650, 430, 191, 61));
+        page_email->setFont(font3);
+        page_email->setStyleSheet(QString::fromUtf8("color: rgb(35, 170, 102);"));
+        search_line_edit = new QLineEdit(groupBox_3);
+        search_line_edit->setObjectName("search_line_edit");
+        search_line_edit->setGeometry(QRect(710, 10, 211, 31));
+        search_line_edit->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 207);\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));"));
+        search_line_edit->setInputMethodHints(Qt::InputMethodHint::ImhLowercaseOnly);
         MainWindow->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName("menuBar");
-        menuBar->setGeometry(QRect(0, 0, 1208, 25));
-        menuSponsor = new QMenu(menuBar);
-        menuSponsor->setObjectName("menuSponsor");
-        MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName("mainToolBar");
         MainWindow->addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName("statusBar");
         MainWindow->setStatusBar(statusBar);
-
-        menuBar->addAction(menuSponsor->menuAction());
-        menuSponsor->addSeparator();
-        menuSponsor->addAction(actionNew);
-        menuSponsor->addAction(actionExit);
 
         retranslateUi(MainWindow);
 
@@ -300,6 +307,7 @@ public:
         actionExit->setText(QCoreApplication::translate("MainWindow", "Exit", nullptr));
         actionGen_rer_PDF->setText(QCoreApplication::translate("MainWindow", "Gen\303\251rer PDF", nullptr));
         actionStatistiques->setText(QCoreApplication::translate("MainWindow", "Statistiques", nullptr));
+        tabSponsor->setTabText(tabSponsor->indexOf(tab), QCoreApplication::translate("MainWindow", "Fournisseur", nullptr));
         groupBox_3->setTitle(QString());
         groupBox->setTitle(QString());
         label_ID->setText(QCoreApplication::translate("MainWindow", "ID _Fournissuer:", nullptr));
@@ -316,8 +324,8 @@ public:
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "inactive", nullptr));
 
         lineEdit_id_sup->setText(QString());
-        pb_supp->setText(QCoreApplication::translate("MainWindow", "Supprimer", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "ID :", nullptr));
+        pb_supp->setText(QCoreApplication::translate("MainWindow", "Supprimer", nullptr));
         label_recherche->setText(QCoreApplication::translate("MainWindow", "ID :", nullptr));
         pb_recherche->setText(QCoreApplication::translate("MainWindow", "Recherche", nullptr));
         label_recherche_2->setText(QCoreApplication::translate("MainWindow", "Tri :", nullptr));
@@ -326,8 +334,8 @@ public:
         countdown->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         pb_PDF->setText(QCoreApplication::translate("MainWindow", "PDF", nullptr));
         pb_STAT->setText(QCoreApplication::translate("MainWindow", "STATS", nullptr));
-        tabSponsor->setTabText(tabSponsor->indexOf(tab), QCoreApplication::translate("MainWindow", "Fournisseur", nullptr));
-        menuSponsor->setTitle(QCoreApplication::translate("MainWindow", "foursn", nullptr));
+        Search_button->setText(QCoreApplication::translate("MainWindow", "Web Search", nullptr));
+        page_email->setText(QCoreApplication::translate("MainWindow", "Send an Email", nullptr));
     } // retranslateUi
 
 };

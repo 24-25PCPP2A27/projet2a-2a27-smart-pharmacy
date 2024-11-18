@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 QT       += core gui sql
 QT += printsupport
  QT += charts
@@ -12,18 +12,23 @@ CONFIG += c++17
 
 SOURCES += \
     connection.cpp \
+    email.cpp \
     fournisseur.cpp \
     gestion_fournisseur.cpp \
-    main.cpp
+    main.cpp \
+    pagem.cpp
 
 HEADERS += \
     connection.h \
+    email.h \
     fournisseur.h \
     gestion_fournisseur.h \
-    main.h
+    main.h \
+    pagem.h
 
 FORMS += \
-    gestion_fournisseur.ui
+    gestion_fournisseur.ui \
+    pagem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

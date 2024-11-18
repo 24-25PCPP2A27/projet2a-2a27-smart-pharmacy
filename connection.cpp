@@ -16,7 +16,7 @@ bool Connection::createconnect()
         test=true;
 
 
-
+//rqmp xxty hoqo vrdy
 
 
     return  test;

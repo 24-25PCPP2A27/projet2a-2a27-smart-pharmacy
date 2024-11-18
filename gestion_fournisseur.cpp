@@ -27,11 +27,58 @@
 #include<QByteArray>
 #include <QSqlQuery>
 #include <QTime>
+//
+#include<QMessageBox>
+#include <QPushButton>
+#include <QDebug>
+#include <QSqlQuery>
+#include <QDate>
+#include <QValidator>
+#include <QSqlError>
+#include <QDoubleValidator>
+#include <QSortFilterProxyModel>
+#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintDialog>
+#include <QPainter>
+#include <QDir>
+#include <QSqlQueryModel>
+#include <QDialog>
+#include <QSqlRecord>
 
+#include <QVector2D>
+#include <QVector>
+#include <QTextEdit>
+#include<QDesktopServices>
+#include <QPainter>
+#include <QSqlQuery>
+#include<QDesktopServices>
+#include<QPdfWriter>
+#include <QMessageBox>
+#include<QUrl>
+#include<QFileDialog>
+#include <QPixmap>
+#include <QTabWidget>
+#include <QtSql/QSqlQueryModel>
+#include<QtSql/QSqlQuery>
+#include<QVariant>
+//#include "smtp.h"
+#include <QtNetwork/QAbstractSocket>
+#include <QtNetwork/QSslSocket>
+#include <QString>
+#include <QTextStream>
+#include <QDebug>
+#include <QtWidgets/QMessageBox>
+#include <QByteArray>
+#include "pagem.h"  // Inclure la déclaration de la classe PageM
+#include "email.h"
+
+//
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
+    , page(nullptr)  // Initialisation à nullptr
+
 {
     ui->setupUi(this);
 
@@ -39,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_ID->setValidator(validator);
     ui->lineEdit_tlf->setValidator(validator);
     ui->lineEdit_id_sup->setValidator(validator);
-    ui->lineEdit_recherche->setValidator(validator);
+    ui->search_line_edit->setMaxLength(30);
     ui->lineEdit_Adr->setMaxLength(30);
     ui->lineEdit_Nom->setMaxLength(20);
     ui->tab_fournisseur->setModel(SP.afficher());
@@ -76,6 +123,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete page;  // Libérer la mémoire allouée pour page
+
+
 
 }
 void MainWindow::updateCountdown()
@@ -404,6 +454,41 @@ void MainWindow::on_pb_STAT_clicked()
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->resize(1000, 500);
     chartView->show();
+}
+
+
+
+
+
+void MainWindow::on_Search_button_clicked()
+{
+    QString searchQuery = ui->search_line_edit->text();
+
+    // URL-encode the search query to ensure it works in the URL
+    QString encodedQuery = QUrl::toPercentEncoding(searchQuery);
+
+    // Construct the Google search URL with the encoded query
+    QUrl googleSearchUrl("https://www.google.com/search?q=" + encodedQuery);
+
+    // Debugging: Check the URL being opened
+    qDebug() << "Opening URL: " << googleSearchUrl.toString();
+
+    // Open Google search in the default web browser
+    if (!QDesktopServices::openUrl(googleSearchUrl)) {
+        qDebug() << "Failed to open the URL!";
+    }
+}
+
+
+
+void MainWindow::on_page_email_clicked()
+{
+    if (!page) {  // Vérifiez si l'instance n'existe pas encore
+        page = new pageM(this);  // Créez une nouvelle instance
+    }
+
+    page->show();  // Affichez la fenêtre pageM
+    //this->close();  // Fermez la fenêtre actuelle si nécessaire
 }
 
 
