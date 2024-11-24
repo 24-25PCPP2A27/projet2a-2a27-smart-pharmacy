@@ -27,7 +27,7 @@
      <string notr="true">background-color: rgb(214, 214, 214);</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_2">
      <widget class="QGroupBox" name="groupBox_6">
