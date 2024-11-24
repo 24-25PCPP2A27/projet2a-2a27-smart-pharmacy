@@ -8,14 +8,14 @@
 #include <QPrinter>
 #include <QMessageBox>
 #include <clientchart.h>
+#include <QSqlError>
+#include <QDate>
 clientwindow::clientwindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ClientWindow)
 {
     ui->setupUi(this);
     displayClients();
-    connect(ui->generateReportButton, &QPushButton::clicked, this, &clientwindow::generateRestockReport);
-
 }
 
 clientwindow::~clientwindow()
@@ -68,7 +68,6 @@ void clientwindow::on_AddClients_clicked() {
     } else {
         QMessageBox::warning(this, "Error", "Failed to add client.");
     }
-
     qDebug() << "Input validation completed.";
 }
 
@@ -286,66 +285,4 @@ void clientwindow::on_statsButton_clicked() {
     chartWidget->show();
 
     ui->tabWidget->setCurrentWidget(ui->tab_statistics);
-}
-
-void clientwindow::analyzeTrends() {
-    QSqlQuery query;
-    query.prepare("SELECT medicament, SUM(quantite) AS total_quantity, MAX(date) AS last_purchase_date "
-                  "FROM client "
-                  "GROUP BY medicament "
-                  "HAVING total_quantity > :threshold");
-
-    query.bindValue(":threshold", 50); // Example: High demand threshold
-    if (query.exec()) {
-        while (query.next()) {
-            QString medication = query.value("medicament").toString();
-            int totalQuantity = query.value("total_quantity").toInt();
-            QDate lastPurchaseDate = query.value("last_purchase_date").toDate();
-
-            // Alert if purchases spiked in the last 7 days
-            if (lastPurchaseDate.daysTo(QDate::currentDate()) < 7) {
-                generateRestockAlert(medication, totalQuantity);
-            }
-        }
-    }
-}
-
-void clientwindow::generateRestockAlert(const QString &medication, int totalQuantity) {
-    int suggestedQuantity = totalQuantity * 1.5; // Suggest 50% more than recent demand
-
-    // Log alert in the database (optional)
-    QSqlQuery query;
-    query.prepare("INSERT INTO restock_alerts (medicament, alert_date, suggested_quantity) "
-                  "VALUES (:medicament, :alert_date, :suggested_quantity)");
-    query.bindValue(":medicament", medication);
-    query.bindValue(":alert_date", QDate::currentDate());
-    query.bindValue(":suggested_quantity", suggestedQuantity);
-    query.exec();
-
-    // Display alert to user
-    QMessageBox::information(this, "Restock Alert",
-                             "High demand detected for " + medication +
-                             ". Suggested restock: " + QString::number(suggestedQuantity) + " units.");
-}
-
-void clientwindow::generateRestockReport() {
-    QSqlQuery query;
-    query.exec("SELECT medicament, SUM(quantite) AS total_quantity "
-               "FROM client "
-               "GROUP BY medicament");
-
-    // Populate the table widget
-    ui->restockTableWidget->setRowCount(0); // Clear previous rows
-    while (query.next()) {
-        QString medication = query.value("medicament").toString();
-        int totalQuantity = query.value("total_quantity").toInt();
-        int suggestedQuantity = totalQuantity * 1.5; // Suggested restock amount
-
-        // Add data to the table
-        int row = ui->restockTableWidget->rowCount();
-        ui->restockTableWidget->insertRow(row);
-        ui->restockTableWidget->setItem(row, 0, new QTableWidgetItem(medication));
-        ui->restockTableWidget->setItem(row, 1, new QTableWidgetItem(QString::number(totalQuantity)));
-        ui->restockTableWidget->setItem(row, 2, new QTableWidgetItem(QString::number(suggestedQuantity)));
-    }
 }

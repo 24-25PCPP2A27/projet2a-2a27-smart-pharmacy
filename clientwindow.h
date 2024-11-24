@@ -25,10 +25,6 @@ private slots: // Ensure that these methods are declared as slots
 
     void on_statsButton_clicked();
 
-    void analyzeTrends();                  // Analyze purchase trends
-    void generateRestockAlert(const QString &medication, int totalQuantity); // Create an alert
-    void generateRestockReport();
-
 private:
 
     void displayClients();

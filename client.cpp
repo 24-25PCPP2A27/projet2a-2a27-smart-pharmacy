@@ -12,8 +12,8 @@ client::client(int total, int quantite, int numvente, QString medicament, QDate 
 
 bool client::ajouter() {
     QSqlQuery query;
-    query.prepare("INSERT INTO client (numvente, quantite, total, medicament,datee) "
-                  "VALUES (:total, :quantite, :numvente, :medicament, :datee)");
+    query.prepare("INSERT INTO client (numvente, quantite, total, medicament, datee) "
+                  "VALUES (:numvente, :quantite, :total, :medicament, :datee)");
     query.bindValue(":numvente", numvente);
     query.bindValue(":quantite", quantite);
     query.bindValue(":total", total);
