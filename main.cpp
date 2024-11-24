@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
+    //creation moment
     Connection c;
     bool test=c.createconnection();
     clientwindow w;

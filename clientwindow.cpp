@@ -262,7 +262,7 @@ void clientwindow::on_exportButton_clicked()
 
        QMessageBox::information(this, "Success", "Client data exported as PDF successfully!");
 }
-
+//shows stats
 void clientwindow::on_statsButton_clicked() {
     client cl;
     QMap<QString, int> stats = cl.getMedicamentStats();
