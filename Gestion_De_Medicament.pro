@@ -1,12 +1,14 @@
-QT += core gui sql charts network
+QT += core gui sql charts network serialport
 
 SOURCES += \
+    arduino.cpp \
     connection.cpp \
     main.cpp \
     ges_medicament.cpp \
     medicament.cpp \
 
 HEADERS += \
+    arduino.h \
     connection.h \
     ges_medicament.h \
     medicament.h \

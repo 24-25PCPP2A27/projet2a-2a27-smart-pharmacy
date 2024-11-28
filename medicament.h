@@ -35,9 +35,6 @@ public:
     bool modifier();
     QSqlQueryModel* afficherParQuantite(bool ascending);
     QSqlQueryModel* rechercherParLibelle(const QString &libelle);
-    QMap<QString, double> getStatistics();
-    void notifyClients(const QString &libelle);
-    bool sendEmail(const QString &toEmail, const QString &medicamentName);
 };
 
 #endif

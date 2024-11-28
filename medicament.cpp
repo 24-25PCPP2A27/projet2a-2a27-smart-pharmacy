@@ -52,11 +52,6 @@ bool Medicament::modifier()
     checkQuery.prepare("SELECT QUANTITE_EN_STOCK FROM MEDICAMENT WHERE IDM = :IDM");
     checkQuery.bindValue(":IDM", idm);
 
-    int oldStock = 0;
-    if (checkQuery.exec() && checkQuery.next()) {
-        oldStock = checkQuery.value(0).toInt();
-    }
-
     QSqlQuery query;
     query.prepare("UPDATE MEDICAMENT SET LIBELLE = :LIBELLE, QUANTITE_EN_STOCK = :QUANTITE_EN_STOCK, PRIX = :PRIX "
                   "WHERE IDM = :IDM");
@@ -66,12 +61,6 @@ bool Medicament::modifier()
     query.bindValue(":PRIX", prix);
 
     bool result = query.exec();
-
-    // Notify clients if stock was 0 and is now positive
-    if (result && oldStock == 0 && quantite_en_stock > 0) {
-        notifyClients(libelle); // Notify clients about the availability
-    }
-
     return result;
 }
 
@@ -109,39 +98,6 @@ QSqlQueryModel* Medicament::rechercherParLibelle(const QString &libelle)
 
     return model;
 }
-
-QMap<QString, double> Medicament::getStatistics()
-{
-    QMap<QString, double> stats;
-    QSqlQuery query;
-
-    // Total quantity
-    query.exec("SELECT SUM(QUANTITE_EN_STOCK) FROM MEDICAMENT");
-    if (query.next()) {
-        stats["total"] = query.value(0).toDouble();
-    }
-
-    // Average quantity
-    query.exec("SELECT AVG(QUANTITE_EN_STOCK) FROM MEDICAMENT");
-    if (query.next()) {
-        stats["average"] = query.value(0).toDouble();
-    }
-
-    // Minimum quantity
-    query.exec("SELECT MIN(QUANTITE_EN_STOCK) FROM MEDICAMENT");
-    if (query.next()) {
-        stats["min"] = query.value(0).toDouble();
-    }
-
-    // Maximum quantity
-    query.exec("SELECT MAX(QUANTITE_EN_STOCK) FROM MEDICAMENT");
-    if (query.next()) {
-        stats["max"] = query.value(0).toDouble();
-    }
-
-    return stats;
-}
-
 
 // Email Sending Function
 bool sendEmail(const QString &toEmail, const QString &subject, const QString &body) {
@@ -194,43 +150,3 @@ bool sendEmail(const QString &toEmail, const QString &subject, const QString &bo
 
     return true; // Return true to indicate the function ran; actual success is determined in the callback.
 }
-
-
-bool Medicament::sendEmail(const QString &toEmail, const QString &medicamentName) {
-    QString subject = QString("Medication Availability Notification");
-    QString body = QString(
-        "Hello,\n\n"
-        "The medication '%1' is now available.\n"
-        "Please visit the pharmacy to collect it.\n\n"
-        "Best regards,\nYour Pharmacy"
-    ).arg(medicamentName);
-
-    return ::sendEmail(toEmail, subject, body);
-}
-
-
-
-
-void Medicament::notifyClients(const QString &libelle)
-{
-    QSqlQuery query;
-    query.prepare("SELECT EMAIL FROM NOTIFICATIONS WHERE MEDICAMENT = :medicament AND NOTIFIED = 'N'");
-    query.bindValue(":medicament", libelle);
-
-    if (query.exec()) {
-        while (query.next()) {
-            QString email = query.value(0).toString();
-
-            // Send Email
-            if (sendEmail(email, libelle)) {
-                // Mark notification as sent
-                QSqlQuery updateQuery;
-                updateQuery.prepare("UPDATE NOTIFICATIONS SET NOTIFIED = 'Y' WHERE EMAIL = :email AND MEDICAMENT = :medicament");
-                updateQuery.bindValue(":email", email);
-                updateQuery.bindValue(":medicament", libelle);
-                updateQuery.exec();
-            }
-        }
-    }
-}
-

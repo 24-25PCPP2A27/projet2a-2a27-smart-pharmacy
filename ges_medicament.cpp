@@ -20,13 +20,25 @@
 #include <QTextDocument>
 using namespace QtCharts;
 
-GesMedicament::GesMedicament(QWidget *parent):
-    QMainWindow(parent),
-    ui(new Ui::Ges_Medicament)
+GesMedicament::GesMedicament(QWidget *parent)
+    : QMainWindow(parent),
+      ui(new Ui::Ges_Medicament)
 {
     ui->setupUi(this);
+
+    // Attempt to connect to Arduino
+    int connectionStatus = arduino.connectToArduino();
+    if (connectionStatus == 0) {
+        qDebug() << "Arduino connected to port:" << arduino.getPortName();
+    } else if (connectionStatus == 1) {
+        QMessageBox::critical(this, "Connection Error", "Failed to open Arduino port.");
+    } else {
+        QMessageBox::critical(this, "Connection Error", "Arduino not found.");
+    }
+
     ui->tableView->setModel(Mtmp.afficher());
 }
+
 
 GesMedicament::~GesMedicament()
 {
@@ -112,54 +124,6 @@ void GesMedicament::on_pushButton_Recher_clicked()
     ui->tableView->setModel(Mtmp.rechercherParLibelle(libelle));
 }
 
-void GesMedicament::on_pushButton_Stats_clicked()
-{
-
-    if (ui->graphicsView->scene() != nullptr) {
-        ui->graphicsView->scene()->clear();
-    } else {
-        ui->graphicsView->setScene(new QGraphicsScene(this));
-    }
-
-    QMap<QString, double> stats = Mtmp.getStatistics();
-
-    QBarSet *set = new QBarSet("Quantité en Stock");
-    *set << stats["total"] << stats["average"] << stats["min"] << stats["max"];
-
-
-    QBarSeries *series = new QBarSeries();
-    series->append(set);
-
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->setTitle("Statistiques des Quantités en Stock");
-    chart->setAnimationOptions(QChart::SeriesAnimations);
-
-
-    QStringList categories;
-    categories << "Total" << "Moyenne" << "Minimum" << "Maximum";
-
-    QBarCategoryAxis *axisX = new QBarCategoryAxis();
-    axisX->append(categories);
-    chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
-
-    QValueAxis *axisY = new QValueAxis();
-    axisY->setRange(0, stats["total"] * 1.1);
-    chart->addAxis(axisY, Qt::AlignLeft);
-    series->attachAxis(axisY);
-
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setMinimumSize(521, 401);
-    ui->graphicsView->scene()->addWidget(chartView);
-
-    chartView->chart()->resize(521, 401);
-
-    chart->setMargins(QMargins(0, 0, 0, 0));
-    chart->legend()->setAlignment(Qt::AlignBottom);
-}
-
 void GesMedicament::on_pushButton_Export_clicked()
 {
     QString filePath = "C:/Users/lenovo/OneDrive/Desktop/Qt Creator/Gestion_De_Medicament/medicaments_list.pdf";
@@ -204,29 +168,6 @@ void GesMedicament::on_pushButton_Export_clicked()
             yOffset = 100;
         }
     }
-
-    painter.end();
-    QMessageBox::information(this, "File Saved", "PDF saved to: " + filePath);
-}
-
-
-void GesMedicament::on_pushButton_Export_Stats_clicked()
-{
-    QString filePath = "C:/Users/lenovo/OneDrive/Desktop/Qt Creator/Gestion_De_Medicament/sales_statistics.pdf";
-
-    QPdfWriter pdfWriter(filePath);
-    pdfWriter.setPageSize(QPagedPaintDevice::A4);
-    QPainter painter(&pdfWriter);
-    painter.setFont(QFont("Arial", 12));
-
-    int yOffset = 50;
-    painter.drawText(200, yOffset, "Statistiques de Ventes");
-
-    yOffset += 30;
-
-    QPixmap chartPixmap = ui->graphicsView->grab();
-    QRect targetRect(100, yOffset, pdfWriter.width() - 200, pdfWriter.height() - 150);
-    painter.drawPixmap(targetRect, chartPixmap);
 
     painter.end();
     QMessageBox::information(this, "File Saved", "PDF saved to: " + filePath);
@@ -368,5 +309,31 @@ void GesMedicament::on_pushButton_log_clicked()
     } else {
         // Show an error message
         QMessageBox::warning(this, "Login Failed", "Invalid username or password.");
+    }
+}
+
+void GesMedicament::on_pushButton_CheckStock_clicked()
+{
+    int idm = ui->lineEdit_IDM_Check->text().toInt();
+
+    // Query the database for the medicament
+    QSqlQuery query;
+    query.prepare("SELECT LIBELLE, QUANTITE_EN_STOCK FROM MEDICAMENT WHERE IDM = :IDM");
+    query.bindValue(":IDM", idm);
+
+    if (query.exec() && query.next()) {
+        QString libelle = query.value(0).toString();
+        int stock = query.value(1).toInt();
+        QString message;
+
+        if (stock > 0) {
+            message = QString("There is %1 of '%2'").arg(stock).arg(libelle);
+        } else {
+            message = QString("'%1' is out of stock").arg(libelle);
+        }
+
+        arduino.sendDataToArduino(message.toUtf8());
+    } else {
+        QMessageBox::critical(this, "Error", "Medicament not found.");
     }
 }

@@ -338,7 +338,7 @@ color: rgb(255, 255, 255);</string>
       <widget class="QPushButton" name="pushButton_Export">
        <property name="geometry">
         <rect>
-         <x>155</x>
+         <x>80</x>
          <y>310</y>
          <width>151</width>
          <height>28</height>
@@ -350,23 +350,6 @@ color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
         <string>Export PDF Medicament</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_Export_Stats">
-       <property name="geometry">
-        <rect>
-         <x>5</x>
-         <y>310</y>
-         <width>151</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(0, 128, 129);
-color: rgb(255, 255, 255);</string>
-       </property>
-       <property name="text">
-        <string>Export PDF Statistics</string>
        </property>
       </widget>
      </widget>
@@ -434,38 +417,11 @@ color: rgb(255, 255, 255);</string>
        <string>Recherch</string>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView">
-      <property name="geometry">
-       <rect>
-        <x>920</x>
-        <y>90</y>
-        <width>525</width>
-        <height>405</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_Stats">
-      <property name="geometry">
-       <rect>
-        <x>1140</x>
-        <y>50</y>
-        <width>93</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(0, 128, 129);
-color: rgb(255, 255, 255);</string>
-      </property>
-      <property name="text">
-       <string>Statistics</string>
-      </property>
-     </widget>
      <widget class="QGraphicsView" name="graphicsView_2">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>500</y>
+        <x>940</x>
+        <y>90</y>
         <width>530</width>
         <height>410</height>
        </rect>
@@ -474,8 +430,8 @@ color: rgb(255, 255, 255);</string>
      <widget class="QPushButton" name="pushButton_ShowRevenue">
       <property name="geometry">
        <rect>
-        <x>430</x>
-        <y>670</y>
+        <x>1140</x>
+        <y>50</y>
         <width>93</width>
         <height>28</height>
        </rect>
@@ -503,6 +459,36 @@ color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>Email registration</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_IDM_Check">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>570</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_CheckStock">
+      <property name="geometry">
+       <rect>
+        <x>790</x>
+        <y>570</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 128, 129);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>stock</string>
       </property>
      </widget>
     </widget>

@@ -3,6 +3,7 @@
 
 #include "medicament.h"
 #include "connection.h"
+#include "arduino.h"
 #include <QMainWindow>
 #include "ui_ges_medicament.h"
 
@@ -26,20 +27,20 @@ private slots:
     void on_pushButton_D_clicked();
     void on_pushButton_T_clicked();
     void on_pushButton_Recher_clicked();
-    void on_pushButton_Stats_clicked();
     void on_pushButton_Export_clicked();
-    void on_pushButton_Export_Stats_clicked();
     void on_pushButton_AddNotification_clicked();
     void addNotificationRequest(const QString &email, const QString &libelle);
     void on_pushButton_ShowRevenue_clicked();
     void on_pushButton_NextPage_clicked();
     void on_pushButton_BackPage_clicked();
     void on_pushButton_log_clicked();
+    void on_pushButton_CheckStock_clicked();
 
 private:
     Ui::Ges_Medicament *ui;
     Medicament Mtmp;
     bool sortAscending = true;
+    Arduino arduino;
 };
 
 #endif // GES_MEDICAMENT_H
