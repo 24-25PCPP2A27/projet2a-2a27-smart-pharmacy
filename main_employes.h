@@ -23,6 +23,8 @@ public:
 #include <QtCharts/QPieSeries>
 #include <QtCharts/QPieSlice>
 #include "qrcodedialog.h"
+#include "arduino.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -46,25 +48,19 @@ private slots:
     void on_pb_pdf_clicked();  // Slot for the button
     void on_pb_showStatsButton_clicked();
     void on_pb_qr_clicked();
-
-
-
-
-
-
-
-
-
-
-
-
+     // objet temporaire
+    void on_Ard_button_clicked();
 
 private:
     Ui::MainWindow *ui;
+    QByteArray data; // variable contenant les données reçues
+
+    Arduino A;
     employes SP;
 
     QPropertyAnimation *animation;
     QTimer *timer;
+
 };
 
 #endif // MAINWINDOW_H

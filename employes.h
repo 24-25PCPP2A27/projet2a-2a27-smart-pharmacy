@@ -41,7 +41,7 @@ public:
     QSqlQueryModel* sortBySalaire();
     QSqlQueryModel* search(int searchId);
     bool exportToPDF(const QString &filePath);
-    void statistique(QWidget *parent);
+    void statistique();
     bool sendEmail(QString NOM, QString PRENOM, QString MAIL, QString MESSAGE);
     void onEmailFinished();
 

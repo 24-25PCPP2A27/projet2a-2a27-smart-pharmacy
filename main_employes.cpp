@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+
     ui->setupUi(this);
     ui->tab_employes->setModel(SP.afficher());
 
@@ -44,26 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_id_sup->setValidator(validator);
     ui->lineEdit_recherche->setValidator(validator);
     ui->lineEdit_salaire->setMaxLength(20);
-    //ui->tab_fournisseur->setModel(SP.afficher());
-    //ui->lineEdit_Nom->setValidator(new QRegExpValidator(QRegExp("[A-Z][a-z]*")));*/
 
-   /* QRegularExpression rx3("\\b[A-Z._%+-]+@[A-Z.-]+\\.[A-Z]\\b",
-                                         QRegularExpression::CaseInsensitiveOption);
-               ui->lineEdit_Adr->setValidator(new QRegularExpressionValidator(rx3, this));
-
-
-               //Initialize "countdown" label text
-                   ui->countdown->setText("1:00");
-
-                   //Connect timer to slot so it gets updated
-                   timer = new QTimer();
-                   QTime time(0, 1, 0);
-                   connect(timer, SIGNAL(timeout()), this, SLOT(updateCountdown()));
-
-                   //It is started with a value of 1000 milliseconds, indicating that it will time out every second.
-                   timer->start(0000);*/
-
-
+//ui->pb_pdf_2->setVisible(true);
 
     //animation
     animation= new QPropertyAnimation(ui->pb_supp, "geometry");
@@ -73,6 +57,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     animation->start();
 
+
+
+    int ret=A.connect_arduino(); // lancer la connexion à arduino
+    switch(ret){
+    case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+        break;
+    case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+       break;
+    case(-1):qDebug() << "arduino is not available";
+    }
+     QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label())); // permet de lancer
+     //le slot update_label suite à la reception du signal readyRead (reception des données). // permet de lancer
+     //le slot update_label suite à la reception du signal readyRead (reception des données).
+
 }
 
 MainWindow::~MainWindow()
@@ -80,14 +78,6 @@ MainWindow::~MainWindow()
     delete ui;
 
 }
-/*void MainWindow::updateCountdown()
-{
-    QTime time = QTime::currentTime();
-       QString text = time.toString("hh:mm");
-       if ((time.second() % 2) == 0)
-           text[2] = ' ';
-       ui->countdown->setText(time.toString("m:ss"));
-}*/
 
 
 
@@ -161,37 +151,10 @@ void MainWindow::on_pb_ajouter_clicked()
                   return; // Stop if poste is empty
               }
 
-          //int x=0;
-
-         //std::string id_a = std::to_string(id_);
-         // std::string m = mail.toStdString();
-
-
-         /* if (nom_employe=="")
-          {
-              QMessageBox::critical(nullptr, QObject::tr("WARNING"),
-                          QObject::tr("Nom n'est pas vide"), QMessageBox::Ok);
-                    x++;
-          }*/
 
 
 
-          /*else if (m.find("@gmail.com")== std:: string::npos)
-          {
-              QMessageBox::critical(nullptr, QObject::tr("WARNING"),
-                          QObject::tr("L'e-mail doit se terminer par @gmail.com"), QMessageBox::Ok);
-                    x++;
-          }
 
-          else if (str_phone.length()!=8)
-          {
-              QMessageBox::critical(nullptr, QObject::tr("WARNING"),
-                          QObject::tr("Le numéro de téléphone doit être composé de 8 chiffres"), QMessageBox::Ok);
-                    x++;
-          }*/
-
-
-           //if(x==0)
           {
           employes Sp(nom_employes,prenom_employes,ID,mail,salaire,poste,hdt);
           bool toTest =Sp.Ajouter();
@@ -225,23 +188,7 @@ void MainWindow::on_pb_ajouter_clicked()
 
 
 }
-/*void MainWindow::on_pb_recherche_clicked()
-{
-    employes Sp;
-    Sp.set_ID(ui->lineEdit_recherche->text().toInt());
-    bool test=Sp.RechercheemployesParID(Sp.get_ID());
-    QMessageBox msgbox;
 
-    if (test)
-       {
-        msgbox.setText("ID existe");
-        ui->tab_employes->setModel(Sp.afficher());
-        }
-    else
-        msgbox.setText("ID n'existe pas");
-        msgbox.exec();
-        ui->lineEdit_recherche->clear();
-}*/
 
 void MainWindow::on_pb_supp_clicked()
 {
@@ -313,6 +260,10 @@ void MainWindow::on_pb_recherche_clicked() {
     // Optionally handle cases where no results are found
     if (model->rowCount() == 0) {
         QMessageBox::information(this, "Search", "No employee found with the given ID.");
+    }else{
+        A.write_to_arduino("1");
+
+
     }
 }
 void MainWindow::on_pb_trier_clicked() {
@@ -329,6 +280,7 @@ void MainWindow::on_pb_trier_clicked() {
     // Show a message box to inform the user
     QMessageBox::information(this, QObject::tr("Tri"),
                              QObject::tr("Les employés ont été triés par salaire."));
+    A.write_to_arduino("1");
 }
 void MainWindow::on_pb_pdf_clicked() {
     QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer en tant que PDF", QDir::homePath(), "PDF Files (*.pdf)");
@@ -353,7 +305,7 @@ void MainWindow::on_pb_showStatsButton_clicked()
     employes employe;
 
     // Call the function to generate the pie chart
-    employe.statistique(this);
+    employe.statistique();
 }
 void MainWindow::on_pb_qr_clicked()
 {
@@ -362,3 +314,8 @@ void MainWindow::on_pb_qr_clicked()
     dialog.exec();  // Show the dialog
 }
 
+
+void MainWindow::on_Ard_button_clicked()
+{
+     A.write_to_arduino("1");
+}

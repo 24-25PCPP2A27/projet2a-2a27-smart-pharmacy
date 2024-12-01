@@ -190,7 +190,6 @@ bool employes::supprimer(int ID)
 QSqlQueryModel* employes::search(int searchId) {
     QSqlQueryModel *model = new QSqlQueryModel();
 
-    // SQL query to search across NOM, PRENOM, and POSTE fields
     QString queryStr = "SELECT * FROM EMPLOYE WHERE ID = :id";
 
         QSqlQuery query;
@@ -215,41 +214,7 @@ QSqlQueryModel* employes::search(int searchId) {
 
     return model;
 }
-/*bool employes::RechercheemployesParID(int IDrecherche)
-{
-    QSqlQuery query;
 
-    query.prepare("SELECT * FROM Fournisseur WHERE id=:IDrecherche");
-    query.bindValue(":IDrecherche",IDrecherche);
-    query.exec();
-    if (!query.first()){
-        return false;
-    }
-    else
-    {
-        int nID = query.record().indexOf("ID");
-        int nNom=query.record().indexOf("nom_employes");
-        int nPrenom=query.record().indexOf("prenom_employes");
-        int nMail=query.record().indexOf("mail");
-        int nSalaire=query.record().indexOf("Salaire");
-        int nPoste=query.record().indexOf("Poste");
-        int nHDT=query.record().indexOf("HDT");
-
-        nom_employes=query.value(nNom).toString();
-        prenom_employes=query.value(nPrenom).toString();
-
-        ID=query.value(nID).toInt();
-        mail=query.value(nMail).toString();
-        salaire=query.value(nSalaire).toInt();
-        poste=query.value(nPoste).toString();
-        hdt=query.value(nHDT).toInt();
-
-
-        return true;
-    }
-
-}
-*/
 
 QSqlQueryModel* employes::sortBySalaire() {
     QSqlQueryModel *model = new QSqlQueryModel();
@@ -307,10 +272,11 @@ bool employes::exportToPDF(const QString &filePath) {
 
     return true;  // Return true to indicate success
 }
-void employes::statistique(QWidget *parent)
+void employes::statistique()
 {
     // Create a new QWidget for the pie chart window
-    QWidget *pieChartWindow = new QWidget(parent);
+    QWidget *pieChartWindow = new QWidget();
+    pieChartWindow->setAttribute(Qt::WA_DeleteOnClose); // Ensures the window deletes itself on close
     pieChartWindow->setWindowTitle("Poste Statistics Pie Chart");
     pieChartWindow->resize(800, 600);
 
@@ -353,11 +319,13 @@ void employes::statistique(QWidget *parent)
         pieChartWindow->setLayout(layout);
 
         // Show the pie chart window
+        pieChartWindow->setWindowModality(Qt::NonModal); // Optional: Makes it non-blocking
         pieChartWindow->show();
     } else {
         qDebug() << "Error executing query:" << query.lastError().text();
     }
 }
+
 
 /*bool employes::sendEmail(QString NOM, QString PRENOM, QString MAIL, QString MESSAGE)
 {
