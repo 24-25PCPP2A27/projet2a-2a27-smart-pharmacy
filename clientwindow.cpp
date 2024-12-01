@@ -10,18 +10,46 @@
 #include <clientchart.h>
 #include <QSqlError>
 #include <QDate>
+
+
 clientwindow::clientwindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ClientWindow)
+    , serialHandler(new SerialHandler(this))
 {
     ui->setupUi(this);
     displayClients();
+
+    // Start the serial communication
+    serialHandler->startCommunication("COM5"); // Adjust to your Arduino's COM port
+
+    // Connect the keypad signal to the handler
+       connect(serialHandler, &SerialHandler::keyPressed, this, &clientwindow::handleKeypadInput);
 }
 
 clientwindow::~clientwindow()
 {
     delete ui;
 }
+
+void clientwindow::handleKeypadInput(char key) {
+    // Get the currently focused widget
+    QWidget *focusedWidget = QApplication::focusWidget();
+    if (auto *lineEdit = qobject_cast<QLineEdit *>(focusedWidget)) {
+        // Append the pressed key to the QLineEdit's text
+        QString currentText = lineEdit->text();
+        if (key == '#') {
+            // Example: '#' clears the text
+            lineEdit->clear();
+        } else if (key == '*') {
+            // Example: '*' deletes the last character
+            lineEdit->setText(currentText.left(currentText.length() - 1));
+        } else {
+            lineEdit->setText(currentText + key);
+        }
+    }
+}
+
 
 void clientwindow::on_AddClients_clicked() {
 
@@ -42,12 +70,12 @@ void clientwindow::on_AddClients_clicked() {
     }
 
 
-    bool totalIsInt, quantiteIsInt, numventeIsInt;
-    int total = totalText.toInt(&totalIsInt);
+    bool totalIsFloat, quantiteIsInt, numventeIsInt;
+    float total = totalText.toFloat(&totalIsFloat);
     int quantite = quantiteText.toInt(&quantiteIsInt);
     int numvente = numventeText.toInt(&numventeIsInt);
 
-    if (!totalIsInt || !quantiteIsInt || !numventeIsInt) {
+    if (!totalIsFloat || !quantiteIsInt || !numventeIsInt) {
         QMessageBox::warning(this, "Input Error", "Total, Quantite, and Numvente must be digits.");
         return;
     }
@@ -69,11 +97,13 @@ void clientwindow::on_AddClients_clicked() {
         QMessageBox::warning(this, "Error", "Failed to add client.");
     }
     qDebug() << "Input validation completed.";
+    qDebug() << "Bound values:" << total << quantite << numvente;
+
 }
 
 
 void clientwindow::on_suppButton_clicked() {
-    int numvente = ui->supplineEdit->text().toInt();
+    int numvente = ui->searchLineEdit->text().toInt();
     bool test = cl.supprimer(numvente);
     if (test) {
         QMessageBox::information(this, "Success", "Client deleted successfully.");
@@ -85,11 +115,11 @@ void clientwindow::on_suppButton_clicked() {
 
 void clientwindow::on_UpdateClients_clicked() {
     // Get values from UI fields in the update tab
-    int numvente = ui->numventeUpdate->text().toInt();
-    int quantite = ui->quantiteUpdate->text().toInt();
-    int total = ui->totalUpdate->text().toInt();
-    QString medicament = ui->medicamentUpdate->text();
-    QDate datee = ui->dateUpdate->date();
+    int numvente = ui->numventeLineEdit->text().toInt();
+    int quantite = ui->quantiteLineEdit->text().toInt();
+    int total = ui->totalLineEdit->text().toInt();
+    QString medicament = ui->medicamentLineEdit->text();
+    QDate datee = ui->dateEdit->date();
 
     // Create a client object and set the new values
     client cl;
@@ -284,5 +314,10 @@ void clientwindow::on_statsButton_clicked() {
     layout->addWidget(chartWidget);
     chartWidget->show();
 
-    ui->tabWidget->setCurrentWidget(ui->tab_statistics);
+
+}
+
+void clientwindow::on_refrechButton_clicked()
+{
+    displayClients();
 }

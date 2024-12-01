@@ -2,7 +2,7 @@
 #include <QtDebug>
 #include <QSqlError>
 
-client::client(int total, int quantite, int numvente, QString medicament, QDate datee) {
+client::client(float total, int quantite, int numvente, QString medicament, QDate datee) {
     this->total = total;
     this->quantite = quantite;
     this->numvente = numvente;
@@ -16,9 +16,16 @@ bool client::ajouter() {
                   "VALUES (:numvente, :quantite, :total, :medicament, :datee)");
     query.bindValue(":numvente", numvente);
     query.bindValue(":quantite", quantite);
-    query.bindValue(":total", total);
+    query.bindValue(":total", QString::number(total, 'f', 2)); // 2 decimal places
     query.bindValue(":medicament", medicament);
     query.bindValue(":datee", datee);
+
+    qDebug() << "Query to execute:" << query.lastQuery();
+        qDebug() << "Bound values: numvente=" << numvente
+                 << ", quantite=" << quantite
+                 << ", total=" << QString::number(total, 'f', 2)
+                 << ", medicament=" << medicament
+                 << ", datee=" << datee;
 
     return query.exec();
 }

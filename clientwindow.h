@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include <client.h>
 #include <QMainWindow>
+#include "serialhandler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientWindow; }
@@ -22,8 +23,9 @@ private slots: // Ensure that these methods are declared as slots
     void on_rechercheButton_clicked();
     void on_trierButton_clicked();
     void on_exportButton_clicked();
-
     void on_statsButton_clicked();
+    void handleKeypadInput(char key);
+    void on_refrechButton_clicked();
 
 private:
 
@@ -32,5 +34,7 @@ private:
     Ui::ClientWindow *ui;
 
     client cl;
+
+    SerialHandler *serialHandler;
 };
 #endif // MAINWINDOW_H

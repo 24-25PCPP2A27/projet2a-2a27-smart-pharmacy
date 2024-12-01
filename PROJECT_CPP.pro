@@ -1,8 +1,7 @@
 QT       += core gui sql
 QT += widgets printsupport
 QT += widgets
-
-
+QT += serialport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Atelier_Connexion
@@ -26,18 +25,24 @@ SOURCES += \
     clientchart.cpp \
         main.cpp \
     connection.cpp \
-    clientwindow.cpp
+    clientwindow.cpp \
+    serialhandler.cpp
 
 HEADERS += \
     client.h \
     clientchart.h \
     connection.h \ \
-    clientwindow.h
+    clientwindow.h \
+    serialhandler.h
 
 FORMS += \
     clientwindow.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

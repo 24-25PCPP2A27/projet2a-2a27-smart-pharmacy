@@ -10,25 +10,26 @@
 class client
 {
 
-    int total,quantite, numvente;
+    float total;
+    int quantite, numvente;
     QString medicament;
     QDate datee;
 
 public:
 
     client() {}
-    client(int, int, int, QString, QDate);
+    client(float, int, int, QString, QDate);
 
 
 
-    int getTotal() { return total; }
+    float getTotal() { return total; }
     int getQuantite() { return quantite; }
     int getNumvente() { return numvente; }
     QString getMedicament() { return medicament; }
     QDate getDate() { return datee; }
 
 
-    void setTotal(int t) { total = t; }
+    void setTotal(float t) { total = t; }
     void setQuantite(int q) { quantite = q; }
     void setNumvente(int n) { numvente = n; }
     void setmedicament(QString m) { medicament = m; }
