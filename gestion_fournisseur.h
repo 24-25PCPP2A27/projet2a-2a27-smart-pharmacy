@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include<fournisseur.h>
-
 #include<QPropertyAnimation>
 #include<QFileDialog>
 #include <QtCharts/QPieSeries>
