@@ -12,7 +12,6 @@ public:
     int connectToArduino();             // Connect the PC to Arduino
     int disconnectFromArduino();        // Close the connection
     int sendDataToArduino(QByteArray);  // Send data to Arduino
-    QByteArray receiveDataFromArduino();// Read data from Arduino
     QString getPortName();              // Get Arduino port name
     QSerialPort* getSerial();           // Accessor for serial port
 

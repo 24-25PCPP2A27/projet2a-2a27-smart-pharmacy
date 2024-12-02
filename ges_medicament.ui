@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1548</width>
-    <height>950</height>
+    <width>1561</width>
+    <height>696</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -363,7 +363,15 @@ color: rgb(255, 255, 255);</string>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: rgb(25, 55, 98);
+color: rgb(255, 255, 255);
+QHeaderView::section {
+    background-color: rgb(0, 128, 129);
+    color: white; 
+    font-weight: bold;
+    border: 1px solid black; 
+}
+</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_T">
@@ -620,7 +628,7 @@ color: rgb(255, 255, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1548</width>
+     <width>1561</width>
      <height>26</height>
     </rect>
    </property>

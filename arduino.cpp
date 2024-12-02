@@ -59,19 +59,10 @@ int Arduino::disconnectFromArduino()
 int Arduino::sendDataToArduino(QByteArray data)
 {
     if (serial->isWritable()) {
-        serial->write(data);  // Send data to Arduino
-        return 0;  // Data sent successfully
+        serial->write(data);
+        return 0;
     } else {
         qDebug() << "Failed to write to Arduino!";
-        return 1;  // Failed to write
+        return 1;
     }
-}
-
-QByteArray Arduino::receiveDataFromArduino()
-{
-    if (serial->isReadable()) {
-        dataBuffer = serial->readAll();  // Read available data
-        return dataBuffer;
-    }
-    return "";  // No data received
 }

@@ -25,8 +25,15 @@ GesMedicament::GesMedicament(QWidget *parent)
       ui(new Ui::Ges_Medicament)
 {
     ui->setupUi(this);
-
-    // Attempt to connect to Arduino
+    ui->tableView->horizontalHeader()->setStyleSheet(
+            "QHeaderView::section {"
+            "    background-color: rgb(0, 128, 129);"
+            "    color: white;"
+            "    font-weight: bold;"
+            "    border: 0px solid black;"
+            "}"
+        );
+    ui->tableView->verticalHeader()->setVisible(false);
     int connectionStatus = arduino.connectToArduino();
     if (connectionStatus == 0) {
         qDebug() << "Arduino connected to port:" << arduino.getPortName();
