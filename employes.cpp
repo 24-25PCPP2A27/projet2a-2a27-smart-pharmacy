@@ -127,7 +127,7 @@ bool employes::Ajouter()
 bool employes::modifier(QString NOM, QString PRENOM, int ID, QString MAIL, int SALAIRE, QString POSTE, int HDT)
 {
     QSqlQuery query;
-    query.prepare("UPDATE AHMED.EMPLOYE SET NOM = :NOM, PRENOM = :PRENOM, POSTE = :POSTE, "
+    query.prepare("UPDATE EMPLOYE SET NOM = :NOM, PRENOM = :PRENOM, POSTE = :POSTE, "
                   "SALAIRE = :SALAIRE, HDT = :HDT, MAIL = :MAIL WHERE ID = :ID");
 
 
@@ -158,7 +158,7 @@ QSqlQueryModel* employes::afficher()
 {
     QSqlQueryModel* model=new QSqlQueryModel();
 
-    model->setQuery("SELECT * FROM AHMED.EMPLOYE");
+    model->setQuery("SELECT * FROM EMPLOYE");
        model->setHeaderData(0, Qt::Horizontal, QObject::tr("NOM"));
        model->setHeaderData(1, Qt::Horizontal, QObject::tr("PRENOM"));
        model->setHeaderData(2, Qt::Horizontal, QObject::tr("ID"));
@@ -179,7 +179,7 @@ bool employes::supprimer(int ID)
            qDebug() << "Update Error: Invalid input data.";
            return false;
        }
-    query.prepare("DELETE FROM AHMED.EMPLOYE WHERE ID = :ID");
+    query.prepare("DELETE FROM EMPLOYE WHERE ID = :ID");
           query.bindValue(":ID",ID);
 
          return query.exec();

@@ -22,21 +22,31 @@ SOURCES += \
     arduino.cpp \
     connection.cpp \
     employes.cpp \
+    ges_medicament.cpp \
     main.cpp \
     main_employes.cpp \
+    medicament.cpp \
+    menu.cpp \
     qrcodedialog.cpp \
     qrcodegen.cpp
 
 HEADERS += \
+    ../Qt Creator/Gestion_De_Medicament/ges_medicament.h \
+    ../Qt Creator/Gestion_De_Medicament/ges_medicament.h \
     arduino.h \
     connection.h \
     employes.h \
+    ges_medicament.h \
     main_employes.h \
+    medicament.h \
+    menu.h \
     qrcodedialog.h \
     qrcodegen.h
 
 FORMS += \
+    ges_medicament.ui \
     main_employes.ui \
+    menu.ui \
     qrcodedialog.ui
 
 # Default rules for deployment.

@@ -27,10 +27,12 @@
 #include<QByteArray>
 #include <QSqlQuery>
 #include <QTime>
+#include "ges_medicament.h" // Include the full definition of GesMedicament
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent, GesMedicament *medicamentPage) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    medicamentPagePtr(medicamentPage)
 {
 
 
@@ -59,17 +61,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    int ret=A.connect_arduino(); // lancer la connexion à arduino
+    int ret=A.connect(); // lancer la connexion à arduino
     switch(ret){
-    case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+    case(0):qDebug()<< "arduino is available and connected to : "<< A.getPortName();
         break;
-    case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+    case(1):qDebug() << "arduino is available but not connected to :" <<A.getPortName();
        break;
     case(-1):qDebug() << "arduino is not available";
     }
-     QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label())); // permet de lancer
+     QObject::connect(A.getSerial(),SIGNAL(readyRead()),this,SLOT(update_label())); // permet de lancer
      //le slot update_label suite à la reception du signal readyRead (reception des données). // permet de lancer
      //le slot update_label suite à la reception du signal readyRead (reception des données).
+     connect(ui->pushButton_ToMedicament, &QPushButton::clicked, this, &MainWindow::goToMedicamentPage);
+
 
 }
 
@@ -79,6 +83,15 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::goToMedicamentPage()
+{
+    if (medicamentPagePtr) {
+        this->hide();                 // Hide the current Employes page
+        medicamentPagePtr->show();    // Show the Medicament page
+    } else {
+        QMessageBox::warning(this, "Navigation Error", "Medicament page is not available.");
+    }
+}
 
 
 void MainWindow::on_pb_ajouter_clicked()
@@ -261,7 +274,7 @@ void MainWindow::on_pb_recherche_clicked() {
     if (model->rowCount() == 0) {
         QMessageBox::information(this, "Search", "No employee found with the given ID.");
     }else{
-        A.write_to_arduino("1");
+        A.sendData("1");
 
 
     }
@@ -280,7 +293,7 @@ void MainWindow::on_pb_trier_clicked() {
     // Show a message box to inform the user
     QMessageBox::information(this, QObject::tr("Tri"),
                              QObject::tr("Les employés ont été triés par salaire."));
-    A.write_to_arduino("1");
+    A.sendData("1");
 }
 void MainWindow::on_pb_pdf_clicked() {
     QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer en tant que PDF", QDir::homePath(), "PDF Files (*.pdf)");
@@ -317,5 +330,5 @@ void MainWindow::on_pb_qr_clicked()
 
 void MainWindow::on_Ard_button_clicked()
 {
-     A.write_to_arduino("1");
+     A.sendData("1");
 }
