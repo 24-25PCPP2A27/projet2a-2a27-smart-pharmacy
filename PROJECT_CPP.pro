@@ -2,6 +2,7 @@ QT       += core gui sql
 QT += widgets printsupport
 QT += widgets
 QT += serialport
+QT += charts
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Atelier_Connexion

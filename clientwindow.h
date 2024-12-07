@@ -3,6 +3,8 @@
 #include <client.h>
 #include <QMainWindow>
 #include "serialhandler.h"
+#include <QVector>
+#include <QPair>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ClientWindow; }
@@ -27,14 +29,20 @@ private slots: // Ensure that these methods are declared as slots
     void handleKeypadInput(char key);
     void on_refrechButton_clicked();
 
-private:
+    void on_restockButton_clicked();
+    void printAllMedications();
+
+    private:
 
     void displayClients();
+    void displayRestockingSuggestions(const QMap<QString, int> &suggestions);
 
     Ui::ClientWindow *ui;
 
     client cl;
 
     SerialHandler *serialHandler;
+
+     QVector<QPair<QString, int>> restockingData; // Vector to store medication and its average days
 };
 #endif // MAINWINDOW_H

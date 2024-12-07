@@ -35,7 +35,7 @@ public:
     void setmedicament(QString m) { medicament = m; }
     void setDate(QDate d) { datee = d; }
 
-
+    bool updateMedicationStock(const QString &medicament, int quantity);
     bool ajouter();
     QSqlQueryModel *displayClients();
     bool supprimer(int);
@@ -43,6 +43,6 @@ public:
     QSqlQueryModel *chercher(int numvente);
     QSqlQueryModel *trier();
     QMap<QString, int> getMedicamentStats();
-
+    QMap<QString, int> calculateRestockingSuggestions(int threshold);
 };
 #endif // CLIENT_H

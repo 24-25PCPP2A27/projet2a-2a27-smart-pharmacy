@@ -21,7 +21,7 @@ clientwindow::clientwindow(QWidget *parent)
     displayClients();
 
     // Start the serial communication
-    serialHandler->startCommunication("COM5"); // Adjust to your Arduino's COM port
+    serialHandler->startCommunication("COM8"); // Adjust to your Arduino's COM port
 
     // Connect the keypad signal to the handler
        connect(serialHandler, &SerialHandler::keyPressed, this, &clientwindow::handleKeypadInput);
@@ -35,71 +35,130 @@ clientwindow::~clientwindow()
 void clientwindow::handleKeypadInput(char key) {
     // Get the currently focused widget
     QWidget *focusedWidget = QApplication::focusWidget();
+
     if (auto *lineEdit = qobject_cast<QLineEdit *>(focusedWidget)) {
-        // Append the pressed key to the QLineEdit's text
+        // Handle keypad input for QLineEdit
         QString currentText = lineEdit->text();
         if (key == '#') {
-            // Example: '#' clears the text
-            lineEdit->clear();
+            // Trigger the "Recherche" functionality
+            on_rechercheButton_clicked();
         } else if (key == '*') {
             // Example: '*' deletes the last character
-            lineEdit->setText(currentText.left(currentText.length() - 1));
+            on_suppButton_clicked();
         } else {
+            // Append the pressed key to the QLineEdit's text
             lineEdit->setText(currentText + key);
         }
     }
 }
 
+void clientwindow::printAllMedications() {
+    QSqlQuery query("SELECT LIBELLE FROM MEDICAMENT");
+    if (query.exec()) {
+        qDebug() << "Current medications in the database:";
+        while (query.next()) {
+            QString libelle = query.value(0).toString();
+            qDebug() << libelle; // Print each medication name
+        }
+    } else {
+        qDebug() << "Failed to retrieve medications:" << query.lastError().text();
+    }
+}
+
+
+
 
 void clientwindow::on_AddClients_clicked() {
-
     qDebug() << "Ajouter button clicked.";
 
     // Retrieve inputs from the UI
     QString totalText = ui->totalLineEdit->text();
     QString quantiteText = ui->quantiteLineEdit->text();
     QString numventeText = ui->numventeLineEdit->text();
-    QString medicament = ui->medicamentLineEdit->text();
+    QString medicament = ui->medicamentLineEdit->text().trimmed(); // Trimmed input
     QDate date = ui->dateEdit->date();
 
-
+    // Check for empty fields
     if (totalText.isEmpty() || quantiteText.isEmpty() || numventeText.isEmpty() || medicament.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill in all fields.");
         qDebug() << "Empty field detected.";
         return;
     }
 
-
-    bool totalIsFloat, quantiteIsInt, numventeIsInt;
-    float total = totalText.toFloat(&totalIsFloat);
+    bool totalIsInt, quantiteIsInt, numventeIsInt;
+    int total = totalText.toInt(&totalIsInt);
     int quantite = quantiteText.toInt(&quantiteIsInt);
     int numvente = numventeText.toInt(&numventeIsInt);
 
-    if (!totalIsFloat || !quantiteIsInt || !numventeIsInt) {
+    if (!totalIsInt || !quantiteIsInt || !numventeIsInt) {
         QMessageBox::warning(this, "Input Error", "Total, Quantite, and Numvente must be digits.");
         return;
     }
-
-
 
     if (!date.isValid()) {
         QMessageBox::warning(this, "Input Error", "Please provide a valid date.");
         return;
     }
 
+    // Debugging output
+    qDebug() << "Looking for medication:" << medicament;
 
+    // Check if the medicament exists and its stock level
+    QSqlQuery query;
+    QString sqlQuery = "SELECT QUANTITE_EN_STOCK FROM MEDICAMENT WHERE UPPER(LIBELLE) = UPPER(:medicament)";
+    qDebug() << "SQL Query:" << sqlQuery << "with medication:" << medicament;
+    query.prepare(sqlQuery);
+    query.bindValue(":medicament", medicament); // Ensure it's trimmed and without quotes
+
+    // Debugging: Output the bound medication name
+    qDebug() << "Bound medication name:" << medicament;
+
+    if (!query.exec()) {
+        qDebug() << "Query execution failed:" << query.lastError().text();
+    } else {
+        qDebug() << "Query executed successfully.";
+    }
+
+    int stockQuantity = 0;
+    if (query.next()) {
+        stockQuantity = query.value(0).toInt();
+        qDebug() << "Stock quantity retrieved:" << stockQuantity;
+    } else {
+        qDebug() << "No records found for medication:" << medicament;
+        QMessageBox::warning(this, "Input Error", "The specified medication does not exist.");
+        return;
+    }
+
+    // Check if restocking is needed
+    if (stockQuantity < quantite) {
+        QMessageBox::warning(this, "Restocking Alert",
+            "The quantity in stock for " + medicament + " is low. Current stock: " + QString::number(stockQuantity) +
+            ". Please restock.");
+    }
+
+
+
+    // Create and insert the new client
     client newClient(total, quantite, numvente, medicament, date);
-
     if (newClient.ajouter()) {
         QMessageBox::information(this, "Success", "Client added successfully.");
         displayClients(); // Refresh displayed clients
     } else {
         QMessageBox::warning(this, "Error", "Failed to add client.");
     }
-    qDebug() << "Input validation completed.";
-    qDebug() << "Bound values:" << total << quantite << numvente;
 
+    qDebug() << "Input validation completed.";
+
+    if (!newClient.updateMedicationStock(medicament, quantite)) {
+        QMessageBox::warning(this, "Stock Update Error", "Failed to update medication stock.");
+    } else {
+        QMessageBox::information(this, "Success", "Client added and medication stock updated.");
+    }
 }
+
+
+
+
 
 
 void clientwindow::on_suppButton_clicked() {
@@ -320,4 +379,58 @@ void clientwindow::on_statsButton_clicked() {
 void clientwindow::on_refrechButton_clicked()
 {
     displayClients();
+}
+
+
+void clientwindow::on_restockButton_clicked() {
+    // Clear existing data in the table widget
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0);
+
+    // Create a vector to hold medications that need restocking
+    std::vector<std::pair<QString, int>> restockingData; // Pair of medication name and average days
+    QSqlQuery query;
+
+    // Get the list of medications that need restocking (less than 100 in stock)
+    query.prepare("SELECT LIBELLE, QUANTITE_EN_STOCK FROM MEDICAMENT WHERE QUANTITE_EN_STOCK < 100");
+    if (!query.exec()) {
+        qDebug() << "Error executing query:" << query.lastError().text();
+        return;
+    }
+
+    while (query.next()) {
+        QString libelle = query.value(0).toString();
+        int quantityInStock = query.value(1).toInt();
+
+        // Calculate the total quantity sold from the client table for this medication
+        QSqlQuery clientQuery;
+        clientQuery.prepare("SELECT SUM(quantite) FROM client WHERE medicament = :medicament");
+        clientQuery.bindValue(":medicament", libelle);
+        clientQuery.exec();
+
+        clientQuery.next();
+        int totalSold = clientQuery.value(0).toInt(); // Total quantity sold
+
+        // Calculate average days before running out of stock
+        if (totalSold > 0) {
+            int averageDays = quantityInStock / (totalSold / 30); // Assuming a 30-day sales period for average
+            restockingData.emplace_back(libelle, averageDays);
+        }
+    }
+
+    // Populate the table widget with restocking data
+    QStringList headers = {"Medication", "Running Out time"};
+    ui->tableWidget->setHorizontalHeaderLabels(headers);
+    ui->tableWidget->setRowCount(restockingData.size());
+
+    for (std::vector<std::pair<QString, int>>::size_type i = 0; i < restockingData.size(); ++i) {
+        const auto &data = restockingData[i];
+        ui->tableWidget->setItem(i, 0, new QTableWidgetItem(data.first));
+        ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number(data.second)));
+    }
+
+    // Show a message if no medications need restocking
+    if (restockingData.empty()) {
+        QMessageBox::information(this, "Restocking Suggestion", "No medications need restocking.");
+    }
 }

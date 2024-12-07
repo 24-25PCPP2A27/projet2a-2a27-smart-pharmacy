@@ -128,3 +128,19 @@ QMap<QString, int> client::getMedicamentStats() {
 
     return stats;
 }
+
+// client.cpp
+
+bool client::updateMedicationStock(const QString &medicament, int quantity) {
+    QSqlQuery query;
+    query.prepare("UPDATE MEDICAMENT SET QUANTITE_EN_STOCK = QUANTITE_EN_STOCK - :quantity WHERE LIBELLE = :medicament");
+    query.bindValue(":quantity", quantity);
+    query.bindValue(":medicament", medicament);
+
+    if (!query.exec()) {
+        qDebug() << "Error updating medication stock:" << query.lastError().text();
+        return false; // Update failed
+    }
+    return true; // Update successful
+}
+

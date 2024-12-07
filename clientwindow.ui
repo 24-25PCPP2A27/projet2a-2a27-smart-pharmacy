@@ -7,20 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>1161</width>
-    <height>526</height>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>ClientWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="formLayoutWidget">
+   <widget class="QGroupBox" name="formGroupBox">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>141</width>
-      <height>461</height>
+      <width>171</width>
+      <height>551</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
@@ -28,6 +28,13 @@
       <widget class="QLabel" name="idLabel">
        <property name="text">
         <string>numvente</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="numventeLineEdit">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
@@ -51,6 +58,9 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="0">
+      <widget class="QLineEdit" name="quantiteLineEdit"/>
+     </item>
      <item row="5" column="0">
       <spacer name="verticalSpacer_4">
        <property name="orientation">
@@ -71,18 +81,8 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
-      <spacer name="verticalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>98</width>
-         <height>30</height>
-        </size>
-       </property>
-      </spacer>
+     <item row="7" column="0">
+      <widget class="QLineEdit" name="medicamentLineEdit"/>
      </item>
      <item row="9" column="0">
       <widget class="QLabel" name="medicamentLabel">
@@ -90,6 +90,9 @@
         <string>total</string>
        </property>
       </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLineEdit" name="totalLineEdit"/>
      </item>
      <item row="11" column="0">
       <spacer name="verticalSpacer">
@@ -124,35 +127,6 @@
        </property>
       </spacer>
      </item>
-     <item row="15" column="0">
-      <widget class="QPushButton" name="UpdateClients">
-       <property name="text">
-        <string>modifier</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="numventeLineEdit"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLineEdit" name="quantiteLineEdit"/>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLineEdit" name="medicamentLineEdit"/>
-     </item>
-     <item row="10" column="0">
-      <widget class="QLineEdit" name="totalLineEdit"/>
-     </item>
-     <item row="13" column="0">
-      <widget class="QDateEdit" name="dateEdit"/>
-     </item>
-     <item row="18" column="0">
-      <widget class="QPushButton" name="AddClients">
-       <property name="text">
-        <string>ajouter</string>
-       </property>
-      </widget>
-     </item>
      <item row="17" column="0">
       <spacer name="verticalSpacer_5">
        <property name="orientation">
@@ -166,23 +140,53 @@
        </property>
       </spacer>
      </item>
+     <item row="8" column="0">
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>98</width>
+         <height>30</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="18" column="0" colspan="2">
+      <widget class="QPushButton" name="AddClients">
+       <property name="text">
+        <string>ajouter</string>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="0" colspan="2">
+      <widget class="QPushButton" name="UpdateClients">
+       <property name="text">
+        <string>modifier</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QDateEdit" name="dateEdit"/>
+     </item>
     </layout>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>169</y>
-      <width>671</width>
-      <height>201</height>
+      <x>190</x>
+      <y>200</y>
+      <width>661</width>
+      <height>231</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="statsButton">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>390</y>
+      <x>440</x>
+      <y>461</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -194,8 +198,8 @@
    <widget class="QPushButton" name="trierButton">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>390</y>
+      <x>220</x>
+      <y>461</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -207,8 +211,8 @@
    <widget class="QPushButton" name="rechercheButton">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>110</y>
+      <x>410</x>
+      <y>151</y>
       <width>93</width>
       <height>41</height>
      </rect>
@@ -220,8 +224,8 @@
    <widget class="QPushButton" name="exportButton">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>390</y>
+      <x>330</x>
+      <y>461</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -233,10 +237,10 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>119</y>
-      <width>71</width>
-      <height>16</height>
+      <x>190</x>
+      <y>150</y>
+      <width>91</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -246,8 +250,8 @@
    <widget class="QLineEdit" name="searchLineEdit">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>110</y>
+      <x>290</x>
+      <y>151</y>
       <width>113</width>
       <height>41</height>
      </rect>
@@ -256,9 +260,9 @@
    <widget class="QFrame" name="frame_chart">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>870</x>
       <y>120</y>
-      <width>291</width>
+      <width>281</width>
       <height>311</height>
      </rect>
     </property>
@@ -272,8 +276,8 @@
    <widget class="QPushButton" name="refrechButton">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>390</y>
+      <x>550</x>
+      <y>461</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -285,14 +289,45 @@
    <widget class="QPushButton" name="suppButton">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>110</y>
+      <x>520</x>
+      <y>151</y>
       <width>91</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string>eliminer</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>10</y>
+      <width>381</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>40</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Mes Clients</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="restockButton">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>460</y>
+      <width>151</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>restock suggestions</string>
     </property>
    </widget>
   </widget>
