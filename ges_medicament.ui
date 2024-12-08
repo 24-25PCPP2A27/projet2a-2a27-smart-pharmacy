@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1790</width>
-    <height>999</height>
+    <width>1863</width>
+    <height>702</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>1771</width>
+      <x>0</x>
+      <y>0</y>
+      <width>1931</width>
       <height>931</height>
      </rect>
     </property>
@@ -487,6 +487,25 @@ border: none;</string>
        </property>
       </widget>
      </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>1670</x>
+        <y>510</y>
+        <width>151</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../logo.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -495,7 +514,7 @@ border: none;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1790</width>
+     <width>1863</width>
      <height>26</height>
     </rect>
    </property>

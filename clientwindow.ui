@@ -356,6 +356,19 @@
      <string>employer</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="fournisseur">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>590</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>fournisseur</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

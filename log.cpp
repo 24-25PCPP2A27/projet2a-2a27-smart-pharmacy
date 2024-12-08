@@ -1,7 +1,7 @@
 #include "log.h"
 #include "ui_log.h"
-#include "menu.h"
-#include"ui_menu.h"
+#include "main_employes.h"
+#include "ui_main_employes.h"
 #include"connection.h"
 #include <QMessageBox>
 
@@ -42,7 +42,7 @@ void Log::on_pushButton_log_clicked()
 
     // Validate the result
     if (query.next() && query.value(0).toInt() > 0) {
-        Menu *Me = new Menu(this);
+        MainWindow *Me = new MainWindow(this);
         Me->show();
         this->hide();
     } else {

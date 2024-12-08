@@ -24,13 +24,15 @@ SOURCES += \
     clientchart.cpp \
     clientwindow.cpp \
     connection.cpp \
+    email.cpp \
     employes.cpp \
+    fournisseur.cpp \
     ges_medicament.cpp \
+    gestion_fournisseur.cpp \
     log.cpp \
     main.cpp \
     main_employes.cpp \
     medicament.cpp \
-    menu.cpp \
     qrcodedialog.cpp \
     qrcodegen.cpp \
     serialhandler.cpp
@@ -43,12 +45,14 @@ HEADERS += \
     clientchart.h \
     clientwindow.h \
     connection.h \
+    email.h \
     employes.h \
+    fournisseur.h \
     ges_medicament.h \
+    gestion_fournisseur.h \
     log.h \
     main_employes.h \
     medicament.h \
-    menu.h \
     qrcodedialog.h \
     qrcodegen.h \
     serialhandler.h
@@ -56,9 +60,9 @@ HEADERS += \
 FORMS += \
     clientwindow.ui \
     ges_medicament.ui \
+    gestion_fournisseur.ui \
     log.ui \
     main_employes.ui \
-    menu.ui \
     qrcodedialog.ui
 
 # Default rules for deployment.

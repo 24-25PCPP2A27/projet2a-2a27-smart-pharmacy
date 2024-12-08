@@ -2,7 +2,6 @@
 #include "ui_ges_medicament.h"
 #include"main_employes.h"
 #include "medicament.h"
-#include "menu.h"
 #include"main_employes.h"
 #include "connection.h"
 #include <QMessageBox>
@@ -24,6 +23,8 @@
 #include <QDialog>
 #include "clientwindow.h"
 #include "ui_clientwindow.h"
+#include "gestion_fournisseur.h"
+#include "ui_gestion_fournisseur.h"
 using namespace QtCharts;
 
 GesMedicament::GesMedicament(QWidget *parent)
@@ -262,5 +263,12 @@ void GesMedicament::on_Clientm_clicked()
 {
     clientwindow *E = new clientwindow(this);
     E->show();
+    this->hide();
+}
+
+void GesMedicament::on_Fournisseurm_clicked()
+{
+    gestfour *Me = new gestfour(this);
+    Me->show();
     this->hide();
 }

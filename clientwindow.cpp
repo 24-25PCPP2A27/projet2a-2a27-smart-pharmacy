@@ -14,6 +14,8 @@
 #include "main_employes.h"
 #include"ui_ges_medicament.h"
 #include"ui_main_employes.h"
+#include "gestion_fournisseur.h"
+#include "ui_gestion_fournisseur.h"
 
 
 clientwindow::clientwindow(QWidget *parent)
@@ -445,5 +447,12 @@ void clientwindow::on_pushButton_2_clicked()
 {
     MainWindow *E = new MainWindow(this);
     E->show();
+    this->hide();
+}
+
+void clientwindow::on_fournisseur_clicked()
+{
+    gestfour *Me = new gestfour(this);
+    Me->show();
     this->hide();
 }

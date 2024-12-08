@@ -5,7 +5,6 @@
 #include "connection.h"
 #include "arduino.h"
 #include "main_employes.h"
-#include "menu.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +32,8 @@ private slots:
     void goToEmployesPage();
 
     void on_Clientm_clicked();
+
+    void on_Fournisseurm_clicked();
 
 private:
     Ui::ges_medicament *ui;

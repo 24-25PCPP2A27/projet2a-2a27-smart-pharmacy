@@ -36,6 +36,8 @@ private slots: // Ensure that these methods are declared as slots
 
     void on_pushButton_2_clicked();
 
+    void on_fournisseur_clicked();
+
 private:
 
     void displayClients();

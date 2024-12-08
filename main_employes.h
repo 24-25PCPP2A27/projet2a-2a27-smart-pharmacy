@@ -54,6 +54,8 @@ private slots:
 
         void on_pushButton_5_clicked();
 
+        void on_pushButton_6_clicked();
+
 private:
     Ui::MainWindow *ui;
     QByteArray data; // variable contenant les données reçues

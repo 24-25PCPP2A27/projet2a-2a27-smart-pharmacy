@@ -30,6 +30,8 @@
 #include "ges_medicament.h" // Include the full definition of GesMedicament
 #include "clientwindow.h"
 #include "ui_clientwindow.h"
+#include "gestion_fournisseur.h"
+#include "ui_gestion_fournisseur.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -296,5 +298,12 @@ void MainWindow::on_pushButton_5_clicked()
 {
     clientwindow *E = new clientwindow(this);
     E->show();
+    this->hide();
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    gestfour *Me = new gestfour(this);
+    Me->show();
     this->hide();
 }
