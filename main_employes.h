@@ -36,7 +36,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr, GesMedicament *medicamentPage = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 
@@ -52,9 +52,10 @@ private slots:
         void on_Ard_button_clicked();
         void goToMedicamentPage(); // Slot to navigate to the Medicament page
 
+        void on_pushButton_5_clicked();
+
 private:
     Ui::MainWindow *ui;
-    GesMedicament *medicamentPagePtr;
     QByteArray data; // variable contenant les données reçues
 
     Arduino A;

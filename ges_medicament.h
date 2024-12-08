@@ -17,10 +17,9 @@ class GesMedicament : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GesMedicament(QWidget *parent = nullptr, Menu *menu = nullptr, MainWindow *employesPage = nullptr);
+    explicit GesMedicament(QWidget *parent = nullptr);
     ~GesMedicament();
     void showRevenuePieChart();
-    void setEmployesPage(MainWindow *employesPage);
 
 private slots:
     void on_pushButton_A_clicked();
@@ -29,19 +28,14 @@ private slots:
     void on_pushButton_T_clicked();
     void on_pushButton_Recher_clicked();
     void on_pushButton_Export_clicked();
-    void on_pushButton_AddNotification_clicked();
-    void addNotificationRequest(const QString &email, const QString &libelle);
     void on_pushButton_ShowRevenue_clicked();
-    void on_pushButton_NextPage_clicked();
-    void on_pushButton_BackPage_clicked();
-    void on_pushButton_log_clicked();
     void on_pushButton_CheckStock_clicked();
     void goToEmployesPage();
 
+    void on_Clientm_clicked();
+
 private:
     Ui::ges_medicament *ui;
-    Menu *menuPtr;          // Pointer to the Menu instance
-    MainWindow *employesPagePtr;
     Medicament Mtmp;        // Temporary Medicament object
     bool sortAscending = true;
     Arduino arduino;

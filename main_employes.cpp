@@ -28,11 +28,12 @@
 #include <QSqlQuery>
 #include <QTime>
 #include "ges_medicament.h" // Include the full definition of GesMedicament
+#include "clientwindow.h"
+#include "ui_clientwindow.h"
 
-MainWindow::MainWindow(QWidget *parent, GesMedicament *medicamentPage) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    medicamentPagePtr(medicamentPage)
+    ui(new Ui::MainWindow)
 {
 
 
@@ -85,15 +86,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::goToMedicamentPage()
 {
-    if (medicamentPagePtr) {
-        this->hide();                 // Hide the current Employes page
-        medicamentPagePtr->show();    // Show the Medicament page
-    } else {
-        QMessageBox::warning(this, "Navigation Error", "Medicament page is not available.");
-    }
+    GesMedicament *M = new GesMedicament(this);
+    M->show();
+    this->hide();
 }
-
-
 void MainWindow::on_pb_ajouter_clicked()
 {
 
@@ -170,22 +166,8 @@ void MainWindow::on_pb_ajouter_clicked()
 
           {
           employes Sp(nom_employes,prenom_employes,ID,mail,salaire,poste,hdt);
-          bool toTest =Sp.Ajouter();
-          if(toTest)
-          {
-              ui->tab_employes->setModel(SP.afficher());//refresh
-              QMessageBox::information(nullptr, QObject::tr("Ajout employe"),
-                                QObject::tr(" ajout employe avec succès"), QMessageBox::Ok);
-                                //ui->tab_fournisseur->setModel(Sp.afficher());
-          }else{
-              QMessageBox::critical(nullptr, QObject::tr("ajout non effectué"),
-                                    QObject::tr("ajout failed.\n"
-                                                "Click Cancel to exit."), QMessageBox::Cancel);
-
-
-
-
-      }
+          Sp.Ajouter();
+          ui->tab_employes->setModel(SP.afficher());//refresh
           ui->lineEdit_ID->clear();
           ui->lineEdit_nomE->clear();
           ui->lineEdit_PrenomE->clear();
@@ -207,20 +189,8 @@ void MainWindow::on_pb_supp_clicked()
 {
     employes Sp;
     int ID = ui->lineEdit_id_sup->text().toInt();
-    bool test=Sp.supprimer(ID);
-    QMessageBox msgbox;
-
-    if (test)
-       {
-        ui->tab_employes->setModel(SP.afficher());//refrech
-
-        msgbox.setText("Suppression avec succes");
-        ui->tab_employes->setModel(Sp.afficher());////////////////////////////
-        }
-    else
-        msgbox.setText("failed");
-        msgbox.exec();
-        ui->lineEdit_id_sup->clear();
+    Sp.supprimer(ID);
+    ui->tab_employes->setModel(SP.afficher());//refrech
 }
 void MainWindow::on_pb_modifier_clicked()
 {
@@ -236,19 +206,8 @@ void MainWindow::on_pb_modifier_clicked()
     QString hdtString = QString::number(HDT);
 
     employes Sp;
-    bool test = Sp.modifier(NOM, PRENOM,ID, MAIL, SALAIRE, POSTE, HDT);
-
-
-    QMessageBox msgbox;
-    if (test) {
-        msgbox.setText("Modification réussie.");
-        ui->tab_employes->setModel(SP.afficher());//refrech
-    } else {
-        msgbox.setText("Échec de la modification.");
-    }
-    msgbox.exec();
-
-    // Clear the input fields
+    Sp.modifier(NOM, PRENOM,ID, MAIL, SALAIRE, POSTE, HDT);
+    ui->tab_employes->setModel(SP.afficher());//refrech
     ui->lineEdit_nomE->clear();
     ui->lineEdit_PrenomE->clear();
     ui->lineEdit_ID->clear();
@@ -331,4 +290,11 @@ void MainWindow::on_pb_qr_clicked()
 void MainWindow::on_Ard_button_clicked()
 {
      A.sendData("1");
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    clientwindow *E = new clientwindow(this);
+    E->show();
+    this->hide();
 }

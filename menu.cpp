@@ -1,5 +1,11 @@
 #include "menu.h"
 #include "ui_menu.h"
+#include "ges_medicament.h"
+#include "main_employes.h"
+#include"ui_ges_medicament.h"
+#include"ui_main_employes.h"
+#include "clientwindow.h"
+#include "ui_clientwindow.h"
 
 Menu::Menu(QWidget *parent) :
     QMainWindow(parent),
@@ -15,20 +21,23 @@ Menu::~Menu()
 
 void Menu::on_Employe_clicked()
 {
-    currentpage = 1;
-    emit pageChanged(currentpage);
+    MainWindow *E = new MainWindow(this);
+    E->show();
+    this->hide();
 }
 
 void Menu::on_Medicament_clicked()
 {
-    currentpage = 2;
-    emit pageChanged(currentpage);
+    GesMedicament *E = new GesMedicament(this);
+    E->show();
+    this->hide();
 }
 
 void Menu::on_Client_clicked()
 {
-    currentpage = 3;
-    emit pageChanged(currentpage);
+    clientwindow *E = new clientwindow(this);
+    E->show();
+    this->hide();
 }
 
 void Menu::on_Fournisseur_clicked()

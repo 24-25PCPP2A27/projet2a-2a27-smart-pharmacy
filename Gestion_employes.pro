@@ -20,31 +20,43 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     arduino.cpp \
+    client.cpp \
+    clientchart.cpp \
+    clientwindow.cpp \
     connection.cpp \
     employes.cpp \
     ges_medicament.cpp \
+    log.cpp \
     main.cpp \
     main_employes.cpp \
     medicament.cpp \
     menu.cpp \
     qrcodedialog.cpp \
-    qrcodegen.cpp
+    qrcodegen.cpp \
+    serialhandler.cpp
 
 HEADERS += \
     ../Qt Creator/Gestion_De_Medicament/ges_medicament.h \
     ../Qt Creator/Gestion_De_Medicament/ges_medicament.h \
     arduino.h \
+    client.h \
+    clientchart.h \
+    clientwindow.h \
     connection.h \
     employes.h \
     ges_medicament.h \
+    log.h \
     main_employes.h \
     medicament.h \
     menu.h \
     qrcodedialog.h \
-    qrcodegen.h
+    qrcodegen.h \
+    serialhandler.h
 
 FORMS += \
+    clientwindow.ui \
     ges_medicament.ui \
+    log.ui \
     main_employes.ui \
     menu.ui \
     qrcodedialog.ui
